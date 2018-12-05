@@ -20,3 +20,11 @@ class Document: UIDocument {
     }
 }
 
+extension Document {
+    
+    // file:///private/var/mobile/Containers/Data/Application/8D80C08E-E0C7-4E52-9C43-55E0CACEAB3A/Documents/Inbox/%E4%B8%9D%E8%B7%AF%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3-8.pdf
+    func isInDocumentInbox() -> Bool {
+        return fileURL.path.contains("/Documents/Inbox/")
+    }
+    
+}

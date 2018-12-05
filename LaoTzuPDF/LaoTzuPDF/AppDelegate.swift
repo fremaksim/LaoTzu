@@ -16,15 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        //        Log.output().info("didFinishLaunchingWithOptions")
         
-        //        #if DEBUG
-        /* DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-         PAirSandbox.sharedInstance()?.enableSwipe()
-         PAirSandbox.sharedInstance()?.showBrowser()
-         }
-         */
-        //        #endif
         
         return true
     }
@@ -54,37 +46,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         Log.output().info(url)
         // Log.output().info(options[UIApplication.OpenURLOptionsKey.sourceApplication]) 来源 eg.: com.tencent.xin is 微信
-        if url.isFileURL { // /private/var/mobile/Containers/Data/Application/B9AD627F-6BAB-48AC-9D4B-4D7D20794027/Documents/Inbox/%E4%B8%9D%E8%B7%AF%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3-5.pdf
-            Log.output().info("is File URL")
-            
+        /* if url.isFileURL { // /private/var/mobile/Containers/Data/Application/B9AD627F-6BAB-48AC-9D4B-4D7D20794027/Documents/Inbox/%E4%B8%9D%E8%B7%AF%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3-5.pdf
+         Log.output().info("is File URL")
+         }
+         */
+        // Ensure the URL is a file URL
+        guard url.isFileURL else { return false }
+        
+        // Reveal / import the document at the URL
+        guard let documentBrowserViewController = window?.rootViewController as? DocumentBrowserViewController else { return false }
+        
+        documentBrowserViewController.revealDocument(at: url, importIfNeeded: true) { (revealedDocumentURL, error) in
+            if let error = error {
+                // Handle the error appropriately
+                print("Failed to reveal the document at URL \(url) with error: '\(error)'")
+                return
+            }
+            if let documentURL = revealedDocumentURL {
+                Log.output().info("revealedDocumentURL: \(documentURL)")
+            }
+            // Present the Document View Controller for the revealed URL
+            documentBrowserViewController.presentDocument(at: revealedDocumentURL!)
         }
         
         return true
     }
-    
-    
-    /*  private func application(_ app: UIApplication, open inputURL: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-     Log.output().info("inputUrl")
-     // Ensure the URL is a file URL
-     guard inputURL.isFileURL else { return false }
-     
-     // Reveal / import the document at the URL
-     guard let documentBrowserViewController = window?.rootViewController as? DocumentBrowserViewController else { return false }
-     
-     documentBrowserViewController.revealDocument(at: inputURL, importIfNeeded: true) { (revealedDocumentURL, error) in
-     if let error = error {
-     // Handle the error appropriately
-     print("Failed to reveal the document at URL \(inputURL) with error: '\(error)'")
-     return
-     }
-     
-     // Present the Document View Controller for the revealed URL
-     documentBrowserViewController.presentDocument(at: revealedDocumentURL!)
-     }
-     
-     return true
-     }
-     */
     
 }
 

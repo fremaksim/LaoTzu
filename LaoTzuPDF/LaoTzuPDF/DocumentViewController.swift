@@ -70,6 +70,8 @@ class DocumentViewController: UIViewController {
         
         if (pdfView.document != nil) { return }
         
+        Log.output().info(document?.fileURL)
+        
         // Access the document
         document?.open(completionHandler: { (success) in
             if success {
@@ -364,7 +366,12 @@ class DocumentViewController: UIViewController {
     }
     
     @objc func annotationButtonClick() {
-        
+        // detect this file is in Document/Inbox
+        if document?.isInDocumentInbox() == true { // Copy to folder
+            
+        }else {
+            
+        }
     }
     
 }

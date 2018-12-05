@@ -15,7 +15,6 @@
 		6A7C59F321B6A5D9006E502E /* DocumentBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C59F221B6A5D9006E502E /* DocumentBrowserViewController.swift */; };
 		6A7C59F521B7656F006E502E /* DocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C59F421B7656F006E502E /* DocumentViewController.swift */; };
 		6A7C59F921B766FE006E502E /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C59F821B766FE006E502E /* Document.swift */; };
-		6A7C59FB21B76A76006E502E /* pdf_reference_1-7.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6A7C59FA21B76A76006E502E /* pdf_reference_1-7.pdf */; };
 		6A7C59FE21B7A33B006E502E /* MaskPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C59FD21B7A33B006E502E /* MaskPopViewController.swift */; };
 		6A7C5A0221B7B47C006E502E /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A0121B7B47C006E502E /* R.generated.swift */; };
 		6A7C5A0921B7BA48006E502E /* AnnotationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A0821B7BA48006E502E /* AnnotationsViewController.swift */; };
@@ -23,6 +22,7 @@
 		6A7C5A0E21B7C927006E502E /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A0D21B7C927006E502E /* LogManager.swift */; };
 		6A7C5A2021B7D62C006E502E /* PAirSandbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A1E21B7D62C006E502E /* PAirSandbox.m */; };
 		6A7C5A2221B7D94D006E502E /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A2121B7D94D006E502E /* UIViewControllerExtension.swift */; };
+		6A7C5A2421B7E86E006E502E /* DocumentFileFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A2321B7E86E006E502E /* DocumentFileFolder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,7 +36,6 @@
 		6A7C59F221B6A5D9006E502E /* DocumentBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentBrowserViewController.swift; sourceTree = "<group>"; };
 		6A7C59F421B7656F006E502E /* DocumentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentViewController.swift; sourceTree = "<group>"; };
 		6A7C59F821B766FE006E502E /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
-		6A7C59FA21B76A76006E502E /* pdf_reference_1-7.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "pdf_reference_1-7.pdf"; sourceTree = "<group>"; };
 		6A7C59FD21B7A33B006E502E /* MaskPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskPopViewController.swift; sourceTree = "<group>"; };
 		6A7C5A0121B7B47C006E502E /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
 		6A7C5A0821B7BA48006E502E /* AnnotationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsViewController.swift; sourceTree = "<group>"; };
@@ -46,6 +45,7 @@
 		6A7C5A1E21B7D62C006E502E /* PAirSandbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAirSandbox.m; sourceTree = "<group>"; };
 		6A7C5A1F21B7D62C006E502E /* PAirSandbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAirSandbox.h; sourceTree = "<group>"; };
 		6A7C5A2121B7D94D006E502E /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
+		6A7C5A2321B7E86E006E502E /* DocumentFileFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileFolder.swift; sourceTree = "<group>"; };
 		7368ED1B7BFA046D2F66B587 /* Pods-LaoTzuPDF.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaoTzuPDF.debug.xcconfig"; path = "Target Support Files/Pods-LaoTzuPDF/Pods-LaoTzuPDF.debug.xcconfig"; sourceTree = "<group>"; };
 		AE08F918D806A4AC04BCAF89 /* Pods_LaoTzuPDF.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LaoTzuPDF.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -88,7 +88,6 @@
 				6A7C5A0321B7B970006E502E /* Annotation */,
 				6A7C5A0121B7B47C006E502E /* R.generated.swift */,
 				6A7C59FC21B7A2F2006E502E /* Tools */,
-				6A7C59FA21B76A76006E502E /* pdf_reference_1-7.pdf */,
 				6A7C59E021B6A262006E502E /* AppDelegate.swift */,
 				6A7C59F221B6A5D9006E502E /* DocumentBrowserViewController.swift */,
 				6A7C59F421B7656F006E502E /* DocumentViewController.swift */,
@@ -107,6 +106,7 @@
 				6A7C5A1D21B7D62C006E502E /* AirSandbox */,
 				6A7C5A0D21B7C927006E502E /* LogManager.swift */,
 				6A7C59FD21B7A33B006E502E /* MaskPopViewController.swift */,
+				6A7C5A2321B7E86E006E502E /* DocumentFileFolder.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -249,7 +249,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6A7C59EB21B6A263006E502E /* LaunchScreen.storyboard in Resources */,
-				6A7C59FB21B76A76006E502E /* pdf_reference_1-7.pdf in Resources */,
 				6A7C59E821B6A263006E502E /* Assets.xcassets in Resources */,
 				6A7C59E621B6A262006E502E /* Main.storyboard in Resources */,
 			);
@@ -331,6 +330,7 @@
 			files = (
 				6A7C5A0E21B7C927006E502E /* LogManager.swift in Sources */,
 				6A7C5A2021B7D62C006E502E /* PAirSandbox.m in Sources */,
+				6A7C5A2421B7E86E006E502E /* DocumentFileFolder.swift in Sources */,
 				6A7C59F921B766FE006E502E /* Document.swift in Sources */,
 				6A7C59FE21B7A33B006E502E /* MaskPopViewController.swift in Sources */,
 				6A7C5A0921B7BA48006E502E /* AnnotationsViewController.swift in Sources */,
