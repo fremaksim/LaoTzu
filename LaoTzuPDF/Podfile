@@ -7,4 +7,7 @@ target 'LaoTzuPDF' do
 
   # Pods for LaoTzuPDF
 
+pod 'R.swift'
+
+
 end

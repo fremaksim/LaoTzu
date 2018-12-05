@@ -59,6 +59,7 @@ class DocumentViewController: UIViewController {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.layer.cornerRadius = 20
         btn.layer.masksToBounds = true
+        btn.isExclusiveTouch = true
         return btn
     }()
     
@@ -106,8 +107,6 @@ class DocumentViewController: UIViewController {
         pdfView.displayBox = .cropBox
         pdfView.displayMode = .singlePage
         pdfView.displayDirection = .horizontal
-        //        pdfView.displaysAsBook = true
-        //        pdfView.displaysRTL = false
         
         //        pdfView.usePageViewController(true, withViewOptions: nil)
         for view in pdfView.subviews {
@@ -345,6 +344,26 @@ class DocumentViewController: UIViewController {
     }
     
     @objc func editButtonClick() {
+        
+        let annotationButton = UIButton(type: .custom)
+        annotationButton.isExclusiveTouch = true
+        annotationButton.setImage(R.image.editAnnotations(), for: .normal)
+        annotationButton.addTarget(self, action: #selector(annotationButtonClick), for: .touchUpInside)
+        let customView = UIView(frame: CGRect(x: 0,
+                                              y: 100,
+                                              width: UIScreen.main.bounds.width,
+                                              height: 50))
+        customView.backgroundColor = UIColor.yellow.withAlphaComponent(0.5)
+        customView.addSubview(annotationButton)
+        annotationButton.frame = CGRect(x: (UIScreen.main.bounds.width - 50 - 20),
+                                        y: 0,
+                                        width: 50,
+                                        height: 50)
+        
+        MaskPopViewController.show(on: self, with: customView)
+    }
+    
+    @objc func annotationButtonClick() {
         
     }
     

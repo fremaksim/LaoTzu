@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5BE89F6D7DC23665786B4B61 /* Pods_LaoTzuPDF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE08F918D806A4AC04BCAF89 /* Pods_LaoTzuPDF.framework */; };
 		6A7C59E121B6A262006E502E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C59E021B6A262006E502E /* AppDelegate.swift */; };
 		6A7C59E621B6A262006E502E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A7C59E421B6A262006E502E /* Main.storyboard */; };
 		6A7C59E821B6A263006E502E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A7C59E721B6A263006E502E /* Assets.xcassets */; };
@@ -15,9 +16,12 @@
 		6A7C59F521B7656F006E502E /* DocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C59F421B7656F006E502E /* DocumentViewController.swift */; };
 		6A7C59F921B766FE006E502E /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C59F821B766FE006E502E /* Document.swift */; };
 		6A7C59FB21B76A76006E502E /* pdf_reference_1-7.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6A7C59FA21B76A76006E502E /* pdf_reference_1-7.pdf */; };
+		6A7C59FE21B7A33B006E502E /* MaskPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C59FD21B7A33B006E502E /* MaskPopViewController.swift */; };
+		6A7C5A0221B7B47C006E502E /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A0121B7B47C006E502E /* R.generated.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		358D220921271BE2F88209FE /* Pods-LaoTzuPDF.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaoTzuPDF.release.xcconfig"; path = "Target Support Files/Pods-LaoTzuPDF/Pods-LaoTzuPDF.release.xcconfig"; sourceTree = "<group>"; };
 		6A7C59DD21B6A262006E502E /* LaoTzuPDF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LaoTzuPDF.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A7C59E021B6A262006E502E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6A7C59E521B6A262006E502E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -28,6 +32,10 @@
 		6A7C59F421B7656F006E502E /* DocumentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentViewController.swift; sourceTree = "<group>"; };
 		6A7C59F821B766FE006E502E /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		6A7C59FA21B76A76006E502E /* pdf_reference_1-7.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "pdf_reference_1-7.pdf"; sourceTree = "<group>"; };
+		6A7C59FD21B7A33B006E502E /* MaskPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskPopViewController.swift; sourceTree = "<group>"; };
+		6A7C5A0121B7B47C006E502E /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
+		7368ED1B7BFA046D2F66B587 /* Pods-LaoTzuPDF.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaoTzuPDF.debug.xcconfig"; path = "Target Support Files/Pods-LaoTzuPDF/Pods-LaoTzuPDF.debug.xcconfig"; sourceTree = "<group>"; };
+		AE08F918D806A4AC04BCAF89 /* Pods_LaoTzuPDF.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LaoTzuPDF.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BE89F6D7DC23665786B4B61 /* Pods_LaoTzuPDF.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +55,8 @@
 			children = (
 				6A7C59DF21B6A262006E502E /* LaoTzuPDF */,
 				6A7C59DE21B6A262006E502E /* Products */,
+				8C5A9160B08865BFF0D02D46 /* Pods */,
+				9661379E3CA9E6FB54030E8B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +71,8 @@
 		6A7C59DF21B6A262006E502E /* LaoTzuPDF */ = {
 			isa = PBXGroup;
 			children = (
+				6A7C5A0121B7B47C006E502E /* R.generated.swift */,
+				6A7C59FC21B7A2F2006E502E /* Tools */,
 				6A7C59FA21B76A76006E502E /* pdf_reference_1-7.pdf */,
 				6A7C59E021B6A262006E502E /* AppDelegate.swift */,
 				6A7C59F221B6A5D9006E502E /* DocumentBrowserViewController.swift */,
@@ -73,6 +86,31 @@
 			path = LaoTzuPDF;
 			sourceTree = "<group>";
 		};
+		6A7C59FC21B7A2F2006E502E /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				6A7C59FD21B7A33B006E502E /* MaskPopViewController.swift */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
+		8C5A9160B08865BFF0D02D46 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7368ED1B7BFA046D2F66B587 /* Pods-LaoTzuPDF.debug.xcconfig */,
+				358D220921271BE2F88209FE /* Pods-LaoTzuPDF.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		9661379E3CA9E6FB54030E8B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AE08F918D806A4AC04BCAF89 /* Pods_LaoTzuPDF.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -80,9 +118,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6A7C59EF21B6A263006E502E /* Build configuration list for PBXNativeTarget "LaoTzuPDF" */;
 			buildPhases = (
+				89157303578BB241F661F9D8 /* [CP] Check Pods Manifest.lock */,
+				6A7C5A0021B7B3C0006E502E /*  R Swift */,
 				6A7C59D921B6A262006E502E /* Sources */,
 				6A7C59DA21B6A262006E502E /* Frameworks */,
 				6A7C59DB21B6A262006E502E /* Resources */,
+				CFFDAA59AE7C72E122B9AA7D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -140,15 +181,82 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6A7C5A0021B7B3C0006E502E /*  R Swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = " R Swift";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT\"\n";
+		};
+		89157303578BB241F661F9D8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-LaoTzuPDF-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CFFDAA59AE7C72E122B9AA7D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LaoTzuPDF/Pods-LaoTzuPDF-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LaoTzuPDF/Pods-LaoTzuPDF-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6A7C59D921B6A262006E502E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				6A7C59F921B766FE006E502E /* Document.swift in Sources */,
+				6A7C59FE21B7A33B006E502E /* MaskPopViewController.swift in Sources */,
 				6A7C59F521B7656F006E502E /* DocumentViewController.swift in Sources */,
 				6A7C59F321B6A5D9006E502E /* DocumentBrowserViewController.swift in Sources */,
 				6A7C59E121B6A262006E502E /* AppDelegate.swift in Sources */,
+				6A7C5A0221B7B47C006E502E /* R.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +400,7 @@
 		};
 		6A7C59F021B6A263006E502E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7368ED1B7BFA046D2F66B587 /* Pods-LaoTzuPDF.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -311,6 +420,7 @@
 		};
 		6A7C59F121B6A263006E502E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 358D220921271BE2F88209FE /* Pods-LaoTzuPDF.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
