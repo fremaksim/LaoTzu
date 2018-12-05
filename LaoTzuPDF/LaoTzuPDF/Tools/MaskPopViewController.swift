@@ -42,6 +42,7 @@ class MaskPopViewController: UIViewController {
     //MARK: - Instance Methods
     private func setupUI(){
         view.backgroundColor = UIColor.black.withAlphaComponent(backgroundAlpha)
+        view.isExclusiveTouch = true
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
@@ -57,6 +58,7 @@ class MaskPopViewController: UIViewController {
         
         controller.addChild(vc)
         controller.view.addSubview(vc.view)
+        controller.view.bringSubviewToFront(vc.view)
         vc.view.frame = controller.view.bounds
         
         vc.animateCustomView(action: .show)

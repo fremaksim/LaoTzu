@@ -2,19 +2,23 @@ PODS:
   - R.swift (4.0.0):
     - R.swift.Library (~> 4.0.0)
   - R.swift.Library (4.0.0)
+  - SwiftyBeaver (1.6.1)
 
 DEPENDENCIES:
   - R.swift
+  - SwiftyBeaver
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - R.swift
     - R.swift.Library
+    - SwiftyBeaver
 
 SPEC CHECKSUMS:
   R.swift: d6a5ec2f55a8441dc0ed9f1f8b37d7d11ae85c66
   R.swift.Library: c3af34921024333546e23b70e70d0b4e0cffca75
+  SwiftyBeaver: ccfcdf85a04d429f1633f668650b0ce8020bda3a
 
-PODFILE CHECKSUM: 07ba6502d10916c2624198b2839c1092d5597c07
+PODFILE CHECKSUM: 6bb4cc17058e350cc3bd5ce1206a229b63f8a0cd
 
 COCOAPODS: 1.6.0.beta.2

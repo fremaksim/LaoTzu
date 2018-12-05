@@ -18,6 +18,11 @@
 		6A7C59FB21B76A76006E502E /* pdf_reference_1-7.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 6A7C59FA21B76A76006E502E /* pdf_reference_1-7.pdf */; };
 		6A7C59FE21B7A33B006E502E /* MaskPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C59FD21B7A33B006E502E /* MaskPopViewController.swift */; };
 		6A7C5A0221B7B47C006E502E /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A0121B7B47C006E502E /* R.generated.swift */; };
+		6A7C5A0921B7BA48006E502E /* AnnotationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A0821B7BA48006E502E /* AnnotationsViewController.swift */; };
+		6A7C5A0C21B7BDDA006E502E /* UImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A0B21B7BDDA006E502E /* UImageExtension.swift */; };
+		6A7C5A0E21B7C927006E502E /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A0D21B7C927006E502E /* LogManager.swift */; };
+		6A7C5A2021B7D62C006E502E /* PAirSandbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A1E21B7D62C006E502E /* PAirSandbox.m */; };
+		6A7C5A2221B7D94D006E502E /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A2121B7D94D006E502E /* UIViewControllerExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +39,13 @@
 		6A7C59FA21B76A76006E502E /* pdf_reference_1-7.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "pdf_reference_1-7.pdf"; sourceTree = "<group>"; };
 		6A7C59FD21B7A33B006E502E /* MaskPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskPopViewController.swift; sourceTree = "<group>"; };
 		6A7C5A0121B7B47C006E502E /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
+		6A7C5A0821B7BA48006E502E /* AnnotationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationsViewController.swift; sourceTree = "<group>"; };
+		6A7C5A0B21B7BDDA006E502E /* UImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UImageExtension.swift; sourceTree = "<group>"; };
+		6A7C5A0D21B7C927006E502E /* LogManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
+		6A7C5A1921B7D61A006E502E /* LaoTzuPDF-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LaoTzuPDF-Bridging-Header.h"; sourceTree = "<group>"; };
+		6A7C5A1E21B7D62C006E502E /* PAirSandbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PAirSandbox.m; sourceTree = "<group>"; };
+		6A7C5A1F21B7D62C006E502E /* PAirSandbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PAirSandbox.h; sourceTree = "<group>"; };
+		6A7C5A2121B7D94D006E502E /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		7368ED1B7BFA046D2F66B587 /* Pods-LaoTzuPDF.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaoTzuPDF.debug.xcconfig"; path = "Target Support Files/Pods-LaoTzuPDF/Pods-LaoTzuPDF.debug.xcconfig"; sourceTree = "<group>"; };
 		AE08F918D806A4AC04BCAF89 /* Pods_LaoTzuPDF.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LaoTzuPDF.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -57,6 +69,7 @@
 				6A7C59DE21B6A262006E502E /* Products */,
 				8C5A9160B08865BFF0D02D46 /* Pods */,
 				9661379E3CA9E6FB54030E8B /* Frameworks */,
+				6A7C5A1921B7D61A006E502E /* LaoTzuPDF-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -71,6 +84,8 @@
 		6A7C59DF21B6A262006E502E /* LaoTzuPDF */ = {
 			isa = PBXGroup;
 			children = (
+				6A7C5A0A21B7BDB2006E502E /* Extensions */,
+				6A7C5A0321B7B970006E502E /* Annotation */,
 				6A7C5A0121B7B47C006E502E /* R.generated.swift */,
 				6A7C59FC21B7A2F2006E502E /* Tools */,
 				6A7C59FA21B76A76006E502E /* pdf_reference_1-7.pdf */,
@@ -89,9 +104,69 @@
 		6A7C59FC21B7A2F2006E502E /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				6A7C5A1D21B7D62C006E502E /* AirSandbox */,
+				6A7C5A0D21B7C927006E502E /* LogManager.swift */,
 				6A7C59FD21B7A33B006E502E /* MaskPopViewController.swift */,
 			);
 			path = Tools;
+			sourceTree = "<group>";
+		};
+		6A7C5A0321B7B970006E502E /* Annotation */ = {
+			isa = PBXGroup;
+			children = (
+				6A7C5A0721B7B9D4006E502E /* Views */,
+				6A7C5A0621B7B9CA006E502E /* ViewModels */,
+				6A7C5A0521B7B9BF006E502E /* Models */,
+				6A7C5A0421B7B9B4006E502E /* ViewControllers */,
+			);
+			path = Annotation;
+			sourceTree = "<group>";
+		};
+		6A7C5A0421B7B9B4006E502E /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				6A7C5A0821B7BA48006E502E /* AnnotationsViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		6A7C5A0521B7B9BF006E502E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		6A7C5A0621B7B9CA006E502E /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		6A7C5A0721B7B9D4006E502E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6A7C5A0A21B7BDB2006E502E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6A7C5A0B21B7BDDA006E502E /* UImageExtension.swift */,
+				6A7C5A2121B7D94D006E502E /* UIViewControllerExtension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6A7C5A1D21B7D62C006E502E /* AirSandbox */ = {
+			isa = PBXGroup;
+			children = (
+				6A7C5A1E21B7D62C006E502E /* PAirSandbox.m */,
+				6A7C5A1F21B7D62C006E502E /* PAirSandbox.h */,
+			);
+			path = AirSandbox;
 			sourceTree = "<group>";
 		};
 		8C5A9160B08865BFF0D02D46 /* Pods */ = {
@@ -146,6 +221,7 @@
 				TargetAttributes = {
 					6A7C59DC21B6A262006E502E = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
 					};
 				};
 			};
@@ -232,12 +308,14 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-LaoTzuPDF/Pods-LaoTzuPDF-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyBeaver/SwiftyBeaver.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyBeaver.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -251,11 +329,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A7C5A0E21B7C927006E502E /* LogManager.swift in Sources */,
+				6A7C5A2021B7D62C006E502E /* PAirSandbox.m in Sources */,
 				6A7C59F921B766FE006E502E /* Document.swift in Sources */,
 				6A7C59FE21B7A33B006E502E /* MaskPopViewController.swift in Sources */,
+				6A7C5A0921B7BA48006E502E /* AnnotationsViewController.swift in Sources */,
 				6A7C59F521B7656F006E502E /* DocumentViewController.swift in Sources */,
 				6A7C59F321B6A5D9006E502E /* DocumentBrowserViewController.swift in Sources */,
+				6A7C5A0C21B7BDDA006E502E /* UImageExtension.swift in Sources */,
 				6A7C59E121B6A262006E502E /* AppDelegate.swift in Sources */,
+				6A7C5A2221B7D94D006E502E /* UIViewControllerExtension.swift in Sources */,
 				6A7C5A0221B7B47C006E502E /* R.generated.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -403,6 +486,7 @@
 			baseConfigurationReference = 7368ED1B7BFA046D2F66B587 /* Pods-LaoTzuPDF.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 75J4834735;
 				INFOPLIST_FILE = LaoTzuPDF/Info.plist;
@@ -413,6 +497,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mozheanquan.LaoTzuPDF;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LaoTzuPDF-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -423,6 +509,7 @@
 			baseConfigurationReference = 358D220921271BE2F88209FE /* Pods-LaoTzuPDF.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 75J4834735;
 				INFOPLIST_FILE = LaoTzuPDF/Info.plist;
@@ -433,6 +520,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mozheanquan.LaoTzuPDF;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LaoTzuPDF-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
