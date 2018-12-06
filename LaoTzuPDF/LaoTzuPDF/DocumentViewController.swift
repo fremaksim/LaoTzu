@@ -68,10 +68,13 @@ class DocumentViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnTap = true
         
-        if (pdfView.document != nil) { return }
-        
         Log.output().info(document?.fileURL)
         
+        loadDocument()
+    }
+    
+    private func loadDocument(){
+        if (pdfView.document != nil) { return }
         // Access the document
         document?.open(completionHandler: { (success) in
             if success {
@@ -372,6 +375,22 @@ class DocumentViewController: UIViewController {
         }else {
             
         }
+        
+        if navigationController?.isNavigationBarHidden != true {
+            navigationController?.isNavigationBarHidden = true
+            navigationController?.isToolbarHidden = true
+        }
+        
+        documentPickerAction()
+    }
+    
+    /// picker document
+    private func documentPickerAction() {
+        
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["com.adobe.pdf"], in: .import)
+        documentPicker.allowsMultipleSelection = false
+        documentPicker.delegate = self
+        navigationController?.pushViewController(documentPicker, animated: true)
     }
     
 }
@@ -410,6 +429,45 @@ extension DocumentViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return .none
     }
+}
+
+extension DocumentViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        Log.output().info(urls)
+        if let fileURL = urls.first,
+            fileURL.isFileURL{
+            
+            guard let delegate = UIApplication.shared.delegate as? AppDelegate else {return}
+            
+            // Reveal / import the document at the URL
+            guard let documentBrowserViewController = delegate.window?.rootViewController  as? DocumentBrowserViewController else { return  }
+            
+            documentBrowserViewController.revealDocument(at: fileURL, importIfNeeded: true) { (revealedDocumentURL, error) in
+                if let error = error {
+                    // Handle the error appropriately
+                    print("Failed to reveal the document at URL \(fileURL) with error: '\(error)'")
+                    return
+                }
+                if let documentURL = revealedDocumentURL {
+                    Log.output().info("revealedDocumentURL: \(documentURL)")
+                }
+                // Present the Document View Controller for the revealed URL
+                documentBrowserViewController.presentDocument(at: revealedDocumentURL!)
+            }
+        }
+    }
     
+    func presentDocument(at documentURL: URL) {
+        
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let navigationController = storyBoard.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
+        
+        let documentViewController = navigationController.viewControllers.first as! DocumentViewController
+        documentViewController.document = Document(fileURL: documentURL)
+        
+        navigationController.modalTransitionStyle = .crossDissolve
+        present(navigationController, animated: true, completion: nil)
+    }
 }
 
