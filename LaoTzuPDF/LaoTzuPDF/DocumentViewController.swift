@@ -64,16 +64,15 @@ class DocumentViewController: UIViewController {
         navigationController?.barHideOnTapGestureRecognizer.addTarget(self, action: #selector(barHideOnTapGestureRecognizerHandler))
         
         pdfView.autoScales = true
-        pdfView.displayBox = .cropBox
         pdfView.displayMode = .singlePage
         pdfView.displayDirection = .horizontal
         
-        //        pdfView.usePageViewController(true, withViewOptions: nil)
-        for view in pdfView.subviews {
-            if view.isKind(of: UIScrollView.self) {
+        
+        pdfView.subviews.filter { (view) -> Bool in
+            return view.isKind(of: UIScrollView.self)
+            }.forEach { (view) in
                 (view as? UIScrollView)?.scrollsToTop = false
                 (view as? UIScrollView)?.contentInsetAdjustmentBehavior = .scrollableAxes
-            }
         }
         
         let center = NotificationCenter.default
@@ -122,6 +121,10 @@ class DocumentViewController: UIViewController {
         loadDocument()
     }
     
+    deinit {
+        Log.output().debug("deinit")
+    }
+    
     private func loadDocument(){
         if (pdfView.document != nil) { return }
         // Access the document
@@ -139,8 +142,7 @@ class DocumentViewController: UIViewController {
                 // watermark 1
                 document.delegate = self
                 self.pdfView.document = document
-                
-                
+            
                 self.moveToLastReadingProsess()
                 if self.pdfView.displayDirection == .vertical {
                     self.getScaleFactorForSizeToFit()
@@ -154,6 +156,9 @@ class DocumentViewController: UIViewController {
     }
     
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+        
+        cleanAnnotationPopView()
+        
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
             case UISwipeGestureRecognizer.Direction.right:
@@ -289,6 +294,7 @@ class DocumentViewController: UIViewController {
         
         //        Log.output().info(userInfo)
         if let annotation = userInfo["PDFAnnotationHit"] as? PDFAnnotation {
+            Log.output().info(annotation.annotationKeyValues)
             let convertRect = pdfView.convert(annotation.bounds, from: annotation.page!)
             
             let scale: CGFloat = 4.0
@@ -352,6 +358,30 @@ class DocumentViewController: UIViewController {
         self.present(activityVC, animated: true, completion: nil)
     }
     
+    @IBAction func SaveAction(_ sender: UIBarButtonItem) {
+        
+        guard let document = pdfView.document else {
+            return
+        }
+        
+        let copyURL = URL(fileURLWithPath: DocumentFileFolder.LaoTzuDocumentFileCopyPath, isDirectory: false)
+        if !FileManager.default.fileExists(atPath: copyURL.path) {
+            do {
+               try FileManager.default.createDirectory(at: copyURL, withIntermediateDirectories: true, attributes: nil)
+            }catch {
+                Log.output().error(error)
+            }
+        }
+        
+        let fileName: String = "Se7enCopy.pdf"
+        let url: URL = copyURL.appendingPathComponent(fileName)
+        Log.output().info(url)
+        if  document.write(to: url, withOptions: nil) {
+            Log.output().debug("write to path \(url.path) success!")
+        }
+    }
+    
+    
     @objc func editButtonClick() {
         userAction = .editButtonClick
         
@@ -382,6 +412,18 @@ class DocumentViewController: UIViewController {
         }else {
             
         }
+        
+        guard let currentPage = pdfView.currentPage else { return }
+        
+        let textRect: CGRect = CGRect(x: 20, y: 100, width: 100, height: 40)
+        let textAnnotation = PDFAnnotation(bounds: textRect, forType: .text, withProperties: nil)
+        textAnnotation.contents = "Se7en"
+        textAnnotation.iconType = .note
+        textAnnotation.fontColor = UIColor.purple
+        currentPage.addAnnotation(textAnnotation)
+        
+ 
+        
         
         //        documentPickerAction()
     }

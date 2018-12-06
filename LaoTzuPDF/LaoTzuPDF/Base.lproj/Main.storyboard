@@ -57,11 +57,18 @@
                                 <action selector="dismissDocumentViewController" destination="XCy-Tj-g81" id="AF1-Fr-JIA"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="分享" id="DDi-6o-YDL">
-                            <connections>
-                                <action selector="shareAction" destination="XCy-Tj-g81" id="uSW-8K-zib"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="分享" id="DDi-6o-YDL">
+                                <connections>
+                                    <action selector="shareAction" destination="XCy-Tj-g81" id="uSW-8K-zib"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="保存" id="ib1-fT-Nr4">
+                                <connections>
+                                    <action selector="SaveAction:" destination="XCy-Tj-g81" id="vCS-Dr-hXq"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="pdfView" destination="zKw-qK-LFO" id="V0R-Nb-UYc"/>
