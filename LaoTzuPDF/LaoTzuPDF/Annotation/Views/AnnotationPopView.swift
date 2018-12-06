@@ -16,6 +16,12 @@ class AnnotationPopView: UIView {
         }
     }
     
+    override var frame: CGRect {
+        didSet {
+            layoutIfNeeded()
+        }
+    }
+    
     override var backgroundColor: UIColor? {
         didSet{
             textView.backgroundColor = backgroundColor
@@ -25,6 +31,7 @@ class AnnotationPopView: UIView {
         let textView = UITextView(frame: .zero)
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.font = UIFont.systemFont(ofSize: 9)
+        textView.isUserInteractionEnabled = false
         return textView
     }()
     
@@ -38,8 +45,8 @@ class AnnotationPopView: UIView {
         NSLayoutConstraint.activate([
             textView.leftAnchor.constraint(equalTo: self.leftAnchor),
             textView.rightAnchor.constraint(equalTo: self.rightAnchor),
-            textView.widthAnchor.constraint(equalTo: self.widthAnchor),
-            textView.heightAnchor.constraint(equalTo: self.heightAnchor),
+            textView.topAnchor.constraint(equalTo: self.topAnchor),
+            textView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             ])
         
         backgroundColor = UIColor.yellow.withAlphaComponent(0.8)

@@ -9,17 +9,14 @@
 import UIKit
 import PDFKit
 
-protocol SettingsDelegate {
-    //    var isVerticalWriting: Bool { get }
-    //    var isRightToLeft: Bool { get }
-    var isEncrypted: Bool { get }
-    var allowsDocumentAssembly: Bool { get }
-    func writing(vertically: Bool, rightToLeft: Bool) -> Void
-    func goToPage(page: PDFPage) -> Void
-    func selectOutline(outline: PDFOutline) -> Void
+enum DocumentViewUserAction {
+    case none
+    case annotationClick
+    case editButtonClick
+    case addAnnotation
 }
 
-extension DocumentViewController: SettingsDelegate {
+extension DocumentViewController {
     func goToPage(page: PDFPage) {
         pdfView.go(to: page)
     }
@@ -42,11 +39,8 @@ class DocumentViewController: UIViewController {
     var portraitScaleFactorForSizeToFit: CGFloat = 0.0
     var landscapeScaleFactorForSizeToFit: CGFloat = 0.0
     
-    // delegate properties
-    var isVerticalWriting = false
-    var isRightToLeft = false
     var isEncrypted = false
-    var allowsDocumentAssembly = false
+    // var allowsDocumentAssembly = false
     
     // edit
     lazy var editButton: UIButton = {
@@ -63,53 +57,13 @@ class DocumentViewController: UIViewController {
         return btn
     }()
     
-    override func viewWillAppear(_ animated: Bool) {
-        updateInterface()
-        super.viewWillAppear(animated)
-        navigationController?.hidesBarsOnTap = true
-        
-        loadDocument()
-    }
-    
-    private func loadDocument(){
-        if (pdfView.document != nil) { return }
-        // Access the document
-        document?.open(completionHandler: { (success) in
-            if success {
-                // Display the content of the document, e.g.:
-                self.navigationItem.title = self.document?.localizedName
-                
-                guard let pdfURL: URL = (self.document?.fileURL) else { return }
-                guard let document = PDFDocument(url: pdfURL) else { return }
-                
-                self.allowsDocumentAssembly = document.allowsDocumentAssembly
-                self.isEncrypted = document.isEncrypted
-                
-                // watermark 1
-                document.delegate = self
-                self.pdfView.document = document
-                
-                
-                self.moveToLastReadingProsess()
-                if self.pdfView.displayDirection == .vertical {
-                    self.getScaleFactorForSizeToFit()
-                }
-                
-                self.writing(vertically: self.isVerticalWriting, rightToLeft: self.isRightToLeft)
-                
-                self.setPDFThumbnailView()
-            } else {
-                // Make sure to handle the failed import appropriately, e.g., by presenting an error message to the user.
-            }
-        })
-    }
+    // annotation
+    var userAction: DocumentViewUserAction = .none
     
     override func viewDidLoad() {
         navigationController?.barHideOnTapGestureRecognizer.addTarget(self, action: #selector(barHideOnTapGestureRecognizerHandler))
         
-        
         pdfView.autoScales = true
-        pdfView.displaysPageBreaks = false
         pdfView.displayBox = .cropBox
         pdfView.displayMode = .singlePage
         pdfView.displayDirection = .horizontal
@@ -121,7 +75,6 @@ class DocumentViewController: UIViewController {
                 (view as? UIScrollView)?.contentInsetAdjustmentBehavior = .scrollableAxes
             }
         }
-        
         
         let center = NotificationCenter.default
         center.addObserver(self,
@@ -136,6 +89,7 @@ class DocumentViewController: UIViewController {
                            selector: #selector(didChangeOrientationHandler),
                            name: UIApplication.didChangeStatusBarOrientationNotification,
                            object: nil)
+        // Annotations
         center.addObserver(self,
                            selector: #selector(didHitAnnotation), name: NSNotification.Name.PDFViewAnnotationHit, object: nil)
         
@@ -156,6 +110,47 @@ class DocumentViewController: UIViewController {
         
         view.addGestureRecognizer(swipeRight)
         view.addGestureRecognizer(swipeLeft)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        updateInterface()
+        super.viewWillAppear(animated)
+        
+        // Key to Bars Hidden
+        navigationController?.hidesBarsOnTap = true
+        
+        loadDocument()
+    }
+    
+    private func loadDocument(){
+        if (pdfView.document != nil) { return }
+        // Access the document
+        document?.open(completionHandler: { (success) in
+            if success {
+                // Display the content of the document, e.g.:
+                self.navigationItem.title = self.document?.localizedName
+                
+                guard let pdfURL: URL = (self.document?.fileURL) else { return }
+                guard let document = PDFDocument(url: pdfURL) else { return }
+                
+                // self.allowsDocumentAssembly = document.allowsDocumentAssembly
+                self.isEncrypted = document.isEncrypted
+                
+                // watermark 1
+                document.delegate = self
+                self.pdfView.document = document
+                
+                
+                self.moveToLastReadingProsess()
+                if self.pdfView.displayDirection == .vertical {
+                    self.getScaleFactorForSizeToFit()
+                }
+                
+                self.setPDFThumbnailView()
+            } else {
+                // Make sure to handle the failed import appropriately, e.g., by presenting an error message to the user.
+            }
+        })
     }
     
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
@@ -190,54 +185,6 @@ class DocumentViewController: UIViewController {
         }
     }
     
-    func writing(vertically: Bool, rightToLeft: Bool) {
-        // experimental feature
-        if let currentPage = pdfView.currentPage {
-            if let document: PDFDocument = pdfView.document {
-                let currentIndex: Int = document.index(for: currentPage)
-                
-                print("currentIndex: \(currentIndex)")
-                
-                if rightToLeft != isRightToLeft {
-                    if !allowsDocumentAssembly {
-                        return
-                    }
-                    //
-                    let pageCount: Int = document.pageCount
-                    
-                    print("pageCount: \(pageCount)")
-                    for i in 0..<pageCount/2 {
-                        print("exchangePage at: \(i), withPageAt: \(pageCount-i-1)")
-                        document.exchangePage(at: i, withPageAt: pageCount-i-1)
-                    }
-                    if currentIndex != pageCount - currentIndex - 1 {
-                        if let pdfPage = document.page(at: pageCount - currentIndex - 1) {
-                            print("go to: \(pageCount - currentIndex - 1)")
-                            pdfView.go(to: pdfPage)
-                        }
-                    }
-                    isRightToLeft = rightToLeft
-                }
-                
-                if vertically != isVerticalWriting {
-                    if vertically {
-                        pdfView.displayDirection = .horizontal
-                    } else {
-                        pdfView.displayDirection = .vertical
-                    }
-                    isVerticalWriting = vertically
-                }
-                
-                // reset document to update interface
-                pdfView.document = nil
-                pdfView.document = document
-                pdfView.go(to: currentPage)
-            }
-        }
-        
-        setScaleFactorForSizeToFit()
-    }
-    
     func setPDFThumbnailView() {
         if let margins = navigationController?.toolbar.safeAreaLayoutGuide {
             let pdfThumbnailView = PDFThumbnailView.init()
@@ -266,8 +213,14 @@ class DocumentViewController: UIViewController {
      */
     
     @objc func barHideOnTapGestureRecognizerHandler() {
+        if userAction != .none {
+            userAction = .none
+            return
+        }
         navigationController?.setToolbarHidden(navigationController?.isNavigationBarHidden == true, animated: true)
         setNeedsUpdateOfHomeIndicatorAutoHidden()
+        
+        cleanAnnotationPopView()
     }
     
     func getScaleFactorForSizeToFit() {
@@ -303,11 +256,6 @@ class DocumentViewController: UIViewController {
             if userDeaults.object(forKey: documentURL.path) != nil {
                 // key exists
                 pageIndex = userDeaults.integer(forKey: documentURL.path)
-            } else if isVerticalWriting {
-                //
-                if let pageCount: Int = pdfView.document?.pageCount {
-                    pageIndex = pageCount - 1
-                }
             }
             // TODO: if pageIndex == pageCount - 1, then go to last CGRect
             if let pdfPage = pdfView.document?.page(at: pageIndex) {
@@ -318,15 +266,11 @@ class DocumentViewController: UIViewController {
     
     @objc func saveAndClose() {
         guard let pdfDocument = pdfView.document else { return }
-        if let currentPage = pdfView.currentPage {
-            var currentIndex = pdfDocument.index(for: currentPage)
-            if isRightToLeft {
-                currentIndex = pdfDocument.pageCount - currentIndex - 1
-            }
-            if let documentURL = pdfView.document?.documentURL {
-                userDeaults.set(currentIndex, forKey: documentURL.path)
-                print("saved page index: \(String(describing: currentIndex))")
-            }
+        if let currentPage = pdfView.currentPage,
+            let documentURL = pdfView.document?.documentURL {
+            let currentIndex = pdfDocument.index(for: currentPage)
+            userDeaults.set(currentIndex, forKey: documentURL.path)
+            print("saved page index: \(String(describing: currentIndex))")
         }
         
         self.document?.close(completionHandler: nil)
@@ -337,88 +281,66 @@ class DocumentViewController: UIViewController {
     }
     
     @objc func didHitAnnotation(_ noti: NSNotification) {
-        //        Log.output().info(noti.userInfo)
-        
+        userAction = .annotationClick
         // clean
+        cleanAnnotationPopView()
+        
+        guard let userInfo = noti.userInfo else { return }
+        
+        //        Log.output().info(userInfo)
+        if let annotation = userInfo["PDFAnnotationHit"] as? PDFAnnotation {
+            let convertRect = pdfView.convert(annotation.bounds, from: annotation.page!)
+            
+            let scale: CGFloat = 4.0
+            var targetRect = convertRect
+            targetRect.size.width  *= scale
+            targetRect.size.height *= scale
+            
+            let scaleView: AnnotationPopView = AnnotationPopView(frame: targetRect)
+            scaleView.contents = annotation.contents
+            view.addSubview(scaleView)
+            
+            func addKeyFrame(scaleView: UIView, convertRect: CGRect, scale: CGFloat) {
+                let startTime: Double
+                if scale == 1.0 {
+                    startTime = 0.25
+                }else {
+                    startTime  = 0.25 * Double(scale - 1)
+                }
+                UIView.addKeyframe(withRelativeStartTime: startTime ,
+                                   relativeDuration: 0.25,
+                                   animations: {
+                                    var newFrame = scaleView.frame
+                                    newFrame.size.width  = convertRect.width * scale
+                                    newFrame.size.height = convertRect.height * scale
+                                    scaleView.frame = newFrame
+                })
+            }
+            
+            UIView.animateKeyframes(withDuration: 1,
+                                    delay: 0,
+                                    options:.calculationModeCubic,
+                                    animations: {
+                                        for i in 1...4 {
+                                            addKeyFrame(scaleView: scaleView,
+                                                        convertRect: convertRect,
+                                                        scale: CGFloat(i))
+                                        }
+            })
+        }
+        
+        navigationController?.barHideOnTapGestureRecognizer.isEnabled = true
+    }
+    
+    private func cleanAnnotationPopView() {
         view.subviews.filter { (view) -> Bool in
             view is AnnotationPopView
             }.forEach { (view) in
                 view.removeFromSuperview()
         }
-        
-        
-        guard let userInfo = noti.userInfo else {
-            return
-        }
-        Log.output().info(userInfo)
-        if let annotation = userInfo["PDFAnnotationHit"] as? PDFAnnotation { //
-            Log.output().info(annotation.bounds)
-            let convertRect = pdfView.convert(annotation.bounds, from: annotation.page!)
-            Log.output().info(convertRect)
-            
-            let scale: CGFloat = 4.0
-            var targetRect = convertRect
-            targetRect.size.width *= scale
-            targetRect.size.height *= scale
-            
-            let scaleView: AnnotationPopView = AnnotationPopView(frame: targetRect)
-            scaleView.contents = annotation.contents
-            
-            view.addSubview(scaleView)
-            UIView.animateKeyframes(withDuration: 1,
-                                    delay: 0,
-                                    options:.calculationModeCubic,
-                                    animations: {
-                                        
-                                        UIView.addKeyframe(withRelativeStartTime: 0.25,
-                                                           relativeDuration: 0.0,
-                                                           animations: {
-                                                            var newFrame = scaleView.frame
-                                                            newFrame.size.width  = convertRect.width
-                                                            newFrame.size.height = convertRect.height
-                                                            scaleView.frame = newFrame
-                                                            
-                                        })
-                                        UIView.addKeyframe(withRelativeStartTime: 0.25,
-                                                           relativeDuration: 0.25,
-                                                           animations: {
-                                                            var newFrame = scaleView.frame
-                                                            newFrame.size.width = convertRect.width * 2
-                                                            newFrame.size.height = convertRect.height * 2
-                                                            scaleView.frame = newFrame
-                                                            
-                                        })
-                                        UIView.addKeyframe(withRelativeStartTime: 0.5,
-                                                           relativeDuration: 0.25,
-                                                           animations: {
-                                                            var newFrame = scaleView.frame
-                                                            newFrame.size.width = convertRect.width * 3
-                                                            newFrame.size.height = convertRect.height * 3
-                                                            scaleView.frame = newFrame
-                                                            
-                                        })
-                                        UIView.addKeyframe(withRelativeStartTime: 0.75,
-                                                           relativeDuration: 0.25,
-                                                           animations: {
-                                                            var newFrame = scaleView.frame
-                                                            newFrame.size.width = convertRect.width * 4
-                                                            newFrame.size.height = convertRect.height * 4
-                                                            scaleView.frame = newFrame
-                                                            
-                                        })
-                                        
-                                        
-                                        
-            }) { (_) in
-                
-            }
-            
-            
-        }
     }
     
     //MARK: - UI Event
-    
     @IBAction func dismissDocumentViewController() {
         dismiss(animated: true) {
             self.saveAndClose()
@@ -431,6 +353,7 @@ class DocumentViewController: UIViewController {
     }
     
     @objc func editButtonClick() {
+        userAction = .editButtonClick
         
         let annotationButton = UIButton(type: .custom)
         annotationButton.isExclusiveTouch = true
@@ -451,6 +374,8 @@ class DocumentViewController: UIViewController {
     }
     
     @objc func annotationButtonClick() {
+        userAction = .addAnnotation
+        
         // detect this file is in Document/Inbox
         if document?.isInDocumentInbox() == true { // Copy to folder
             
@@ -458,23 +383,8 @@ class DocumentViewController: UIViewController {
             
         }
         
-        if navigationController?.isNavigationBarHidden != true {
-            navigationController?.isNavigationBarHidden = true
-            navigationController?.isToolbarHidden = true
-        }
-        
-        documentPickerAction()
+        //        documentPickerAction()
     }
-    
-    /// picker document
-    private func documentPickerAction() {
-        
-        let documentPicker = UIDocumentPickerViewController(documentTypes: ["com.adobe.pdf"], in: .import)
-        documentPicker.allowsMultipleSelection = false
-        documentPicker.delegate = self
-        navigationController?.pushViewController(documentPicker, animated: true)
-    }
-    
 }
 
 extension DocumentViewController: PDFDocumentDelegate {
@@ -486,33 +396,9 @@ extension DocumentViewController: PDFDocumentDelegate {
 
 extension DocumentViewController: UIPopoverPresentationControllerDelegate {
     // MARK: - PopoverTableViewController Presentation
-    
     // iOS Popover presentation Segue
     // http://sunnycyk.com/2015/08/ios-popover-presentation-segue/
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        /* if (segue.identifier == "PopoverSettings") {
-         if let popopverVC: PopoverTableViewController = segue.destination as? PopoverTableViewController {
-         popopverVC.modalPresentationStyle = .popover
-         popopverVC.popoverPresentationController?.delegate = self
-         popopverVC.delegate = self
-         if !isEncrypted {
-         // 201 - 44 = 157
-         popopverVC.preferredContentSize = CGSize(width: 300, height: 157)
-         }
-         }
-         } else if (segue.identifier == "Container") {
-         if let containerVC: ContainerViewController = segue.destination as? ContainerViewController {
-         containerVC.pdfDocument = pdfView.document
-         containerVC.displayBox = pdfView.displayBox
-         if let currentPage = pdfView.currentPage, let document: PDFDocument = pdfView.document {
-         containerVC.currentIndex = document.index(for: currentPage)
-         }
-         containerVC.delegate = self
-         }
-         }
-         */
-    }
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {}
     // fix for iPhone Plus
     // https://stackoverflow.com/q/36349303/4063462
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
@@ -556,6 +442,15 @@ extension DocumentViewController: UIDocumentPickerDelegate {
         
         navigationController.modalTransitionStyle = .crossDissolve
         present(navigationController, animated: true, completion: nil)
+    }
+    
+    /// picker document
+    private func documentPickerAction() {
+        
+        let documentPicker = UIDocumentPickerViewController(documentTypes: ["com.adobe.pdf"], in: .import)
+        documentPicker.allowsMultipleSelection = false
+        documentPicker.delegate = self
+        navigationController?.pushViewController(documentPicker, animated: true)
     }
 }
 
