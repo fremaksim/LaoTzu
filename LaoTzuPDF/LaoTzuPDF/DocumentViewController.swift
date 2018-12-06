@@ -10,8 +10,8 @@ import UIKit
 import PDFKit
 
 protocol SettingsDelegate {
-    var isVerticalWriting: Bool { get }
-    var isRightToLeft: Bool { get }
+    //    var isVerticalWriting: Bool { get }
+    //    var isRightToLeft: Bool { get }
     var isEncrypted: Bool { get }
     var allowsDocumentAssembly: Bool { get }
     func writing(vertically: Bool, rightToLeft: Bool) -> Void
@@ -68,8 +68,6 @@ class DocumentViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.hidesBarsOnTap = true
         
-        Log.output().info(document?.fileURL)
-        
         loadDocument()
     }
     
@@ -87,7 +85,10 @@ class DocumentViewController: UIViewController {
                 self.allowsDocumentAssembly = document.allowsDocumentAssembly
                 self.isEncrypted = document.isEncrypted
                 
+                // watermark 1
+                document.delegate = self
                 self.pdfView.document = document
+                
                 
                 self.moveToLastReadingProsess()
                 if self.pdfView.displayDirection == .vertical {
@@ -135,6 +136,8 @@ class DocumentViewController: UIViewController {
                            selector: #selector(didChangeOrientationHandler),
                            name: UIApplication.didChangeStatusBarOrientationNotification,
                            object: nil)
+        center.addObserver(self,
+                           selector: #selector(didHitAnnotation), name: NSNotification.Name.PDFViewAnnotationHit, object: nil)
         
         view.addSubview(editButton)
         NSLayoutConstraint.activate([
@@ -159,12 +162,10 @@ class DocumentViewController: UIViewController {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
             case UISwipeGestureRecognizer.Direction.right:
-                print("Swiped back")
                 if pdfView.canGoToPreviousPage() {
                     pdfView.goToPreviousPage(nil)
                 }
             case UISwipeGestureRecognizer.Direction.left:
-                print("Swiped forward")
                 if pdfView.canGoToNextPage() {
                     pdfView.goToNextPage(nil)
                 }
@@ -335,6 +336,87 @@ class DocumentViewController: UIViewController {
         setScaleFactorForSizeToFit()
     }
     
+    @objc func didHitAnnotation(_ noti: NSNotification) {
+        //        Log.output().info(noti.userInfo)
+        
+        // clean
+        view.subviews.filter { (view) -> Bool in
+            view is AnnotationPopView
+            }.forEach { (view) in
+                view.removeFromSuperview()
+        }
+        
+        
+        guard let userInfo = noti.userInfo else {
+            return
+        }
+        Log.output().info(userInfo)
+        if let annotation = userInfo["PDFAnnotationHit"] as? PDFAnnotation { //
+            Log.output().info(annotation.bounds)
+            let convertRect = pdfView.convert(annotation.bounds, from: annotation.page!)
+            Log.output().info(convertRect)
+            
+            let scale: CGFloat = 4.0
+            var targetRect = convertRect
+            targetRect.size.width *= scale
+            targetRect.size.height *= scale
+            
+            let scaleView: AnnotationPopView = AnnotationPopView(frame: targetRect)
+            scaleView.contents = annotation.contents
+            
+            view.addSubview(scaleView)
+            UIView.animateKeyframes(withDuration: 1,
+                                    delay: 0,
+                                    options:.calculationModeCubic,
+                                    animations: {
+                                        
+                                        UIView.addKeyframe(withRelativeStartTime: 0.25,
+                                                           relativeDuration: 0.0,
+                                                           animations: {
+                                                            var newFrame = scaleView.frame
+                                                            newFrame.size.width  = convertRect.width
+                                                            newFrame.size.height = convertRect.height
+                                                            scaleView.frame = newFrame
+                                                            
+                                        })
+                                        UIView.addKeyframe(withRelativeStartTime: 0.25,
+                                                           relativeDuration: 0.25,
+                                                           animations: {
+                                                            var newFrame = scaleView.frame
+                                                            newFrame.size.width = convertRect.width * 2
+                                                            newFrame.size.height = convertRect.height * 2
+                                                            scaleView.frame = newFrame
+                                                            
+                                        })
+                                        UIView.addKeyframe(withRelativeStartTime: 0.5,
+                                                           relativeDuration: 0.25,
+                                                           animations: {
+                                                            var newFrame = scaleView.frame
+                                                            newFrame.size.width = convertRect.width * 3
+                                                            newFrame.size.height = convertRect.height * 3
+                                                            scaleView.frame = newFrame
+                                                            
+                                        })
+                                        UIView.addKeyframe(withRelativeStartTime: 0.75,
+                                                           relativeDuration: 0.25,
+                                                           animations: {
+                                                            var newFrame = scaleView.frame
+                                                            newFrame.size.width = convertRect.width * 4
+                                                            newFrame.size.height = convertRect.height * 4
+                                                            scaleView.frame = newFrame
+                                                            
+                                        })
+                                        
+                                        
+                                        
+            }) { (_) in
+                
+            }
+            
+            
+        }
+    }
+    
     //MARK: - UI Event
     
     @IBAction func dismissDocumentViewController() {
@@ -395,6 +477,13 @@ class DocumentViewController: UIViewController {
     
 }
 
+extension DocumentViewController: PDFDocumentDelegate {
+    // Watermark 2
+    func classForPage() -> AnyClass {
+        return WatermarkPage.self
+    }
+}
+
 extension DocumentViewController: UIPopoverPresentationControllerDelegate {
     // MARK: - PopoverTableViewController Presentation
     
@@ -445,11 +534,10 @@ extension DocumentViewController: UIDocumentPickerDelegate {
             documentBrowserViewController.revealDocument(at: fileURL, importIfNeeded: true) { (revealedDocumentURL, error) in
                 if let error = error {
                     // Handle the error appropriately
-                    print("Failed to reveal the document at URL \(fileURL) with error: '\(error)'")
+                    Log.output().error("Failed to reveal the document at URL \(fileURL) with error: '\(error)'")
                     return
                 }
-                if let documentURL = revealedDocumentURL {
-                    Log.output().info("revealedDocumentURL: \(documentURL)")
+                if let _ = revealedDocumentURL {
                 }
                 // Present the Document View Controller for the revealed URL
                 documentBrowserViewController.presentDocument(at: revealedDocumentURL!)
