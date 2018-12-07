@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5BE89F6D7DC23665786B4B61 /* Pods_LaoTzuPDF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE08F918D806A4AC04BCAF89 /* Pods_LaoTzuPDF.framework */; };
+		6A148EAD21BA0D7400F196E8 /* WatermarkConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A148EAC21BA0D7400F196E8 /* WatermarkConfiguration.swift */; };
 		6A7C59E121B6A262006E502E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C59E021B6A262006E502E /* AppDelegate.swift */; };
 		6A7C59E621B6A262006E502E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A7C59E421B6A262006E502E /* Main.storyboard */; };
 		6A7C59E821B6A263006E502E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A7C59E721B6A263006E502E /* Assets.xcassets */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		358D220921271BE2F88209FE /* Pods-LaoTzuPDF.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaoTzuPDF.release.xcconfig"; path = "Target Support Files/Pods-LaoTzuPDF/Pods-LaoTzuPDF.release.xcconfig"; sourceTree = "<group>"; };
+		6A148EAC21BA0D7400F196E8 /* WatermarkConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatermarkConfiguration.swift; sourceTree = "<group>"; };
 		6A7C59DD21B6A262006E502E /* LaoTzuPDF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LaoTzuPDF.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A7C59E021B6A262006E502E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6A7C59E521B6A262006E502E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				6A7C5A2821B8ECD5006E502E /* WatermarkPage.swift */,
+				6A148EAC21BA0D7400F196E8 /* WatermarkConfiguration.swift */,
 			);
 			path = Watermark;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A148EAD21BA0D7400F196E8 /* WatermarkConfiguration.swift in Sources */,
 				6A7C5A0E21B7C927006E502E /* LogManager.swift in Sources */,
 				6A7C5A2021B7D62C006E502E /* PAirSandbox.m in Sources */,
 				6A7C5A2421B7E86E006E502E /* DocumentFileFolder.swift in Sources */,
