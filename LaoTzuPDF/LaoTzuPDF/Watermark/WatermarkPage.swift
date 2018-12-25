@@ -39,11 +39,14 @@ class WatermarkPage: PDFPage {
          */
         
         let configuration = WatermarkConfiguration.init(
+            style: .tile,
             contents: "mozheanquan",
             textColor: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5),
-            font: UIFont.boldSystemFont(ofSize: 40), angle: 45.0,
+            font: UIFont.boldSystemFont(ofSize: 40),
+            angle: 45.0,
             lineSpace: 20)
         
+         
         configuration.configurationProperties(in: self, context: context, box: box)
         
         context.restoreGState()

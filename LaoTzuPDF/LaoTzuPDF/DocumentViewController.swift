@@ -8,6 +8,7 @@
 
 import UIKit
 import PDFKit
+import PDFKit.PDFSelection
 
 enum DocumentViewUserAction {
     case none
@@ -378,6 +379,19 @@ class DocumentViewController: UIViewController {
         Log.output().info(url)
         if  document.write(to: url, withOptions: nil) {
             Log.output().debug("write to path \(url.path) success!")
+        }
+    }
+    
+    @IBAction func findAction(_ sender: UIBarButtonItem) {
+        if let selections =  pdfView.document?.findString("mozheanquan", withOptions: NSString.CompareOptions.literal) {
+            for sel in selections {
+                Log.output().debug(sel.string ?? "")
+                if sel.string == "mozheanquan" {
+                    Log.output().debug(selections.count)
+                    break
+                }
+            }
+            
         }
     }
     

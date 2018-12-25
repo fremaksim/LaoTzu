@@ -68,6 +68,11 @@
                                     <action selector="SaveAction:" destination="XCy-Tj-g81" id="vCS-Dr-hXq"/>
                                 </connections>
                             </barButtonItem>
+                            <barButtonItem title="查找" id="2cH-K1-nlT">
+                                <connections>
+                                    <action selector="findAction:" destination="XCy-Tj-g81" id="6Dw-Qj-fM2"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
