@@ -51,15 +51,14 @@ struct ImageWatermarkConfiguration: WatermarkConfigurationProtocol {
         let imageSize = contents.size
         switch style {
         case .tile:
+            let context = UIGraphicsGetCurrentContext()
             
-            // rotate 45° counterClockwise (+ 顺时针，- 逆时针)
-            let radiusAngle: CGFloat
-            if angle != 0 {
-                radiusAngle = (CGFloat.pi / (180.0 / angle))
-            }else {
-                radiusAngle = 0
-            }
-            context.rotate(by: radiusAngle)
+            //将绘制原点（0，0）调整到源image的中心
+            context?.concatenate(CGAffineTransform(translationX: pageBounds.width/2, y: pageBounds.height/2))
+            //以绘制原点为中心旋转
+            context?.concatenate(CGAffineTransform(rotationAngle:  CGFloat.pi * angle / 180))
+            //将绘制原点恢复初始值，保证当前context中心和源image的中心处在一个点(当前context已经旋转，所以绘制出的任何layer都是倾斜的)
+            context?.concatenate(CGAffineTransform(translationX: -pageBounds.width/2, y: -pageBounds.height/2))
             
             let interSpace = lineSpace
             // singlePlace width
@@ -77,25 +76,23 @@ struct ImageWatermarkConfiguration: WatermarkConfigurationProtocol {
             
             let maxCount = max(count, yCount)
             
-            let deltaY = (imageSize.height + lineSpace) / cos(radiusAngle)
-            //            let lineCount = Int(pageBounds.width / deltaY)
+            //此处计算出需要绘制水印文字的起始点，由于水印区域要大于图片区域所以起点在原有基础上移
+            let orignX = -(diagonalLineWidth - pageBounds.width) / 2
+            let orignY = -(diagonalLineWidth - pageBounds.height) / 2
             
-            let range = 0..<maxCount
-            var xNegativeArray = Array(range)
-            var yNegativeArray = Array(range)
-            if angle == 0 {
-            }else if angle > 0 {
-                let newRange = -(maxCount - 1)...(maxCount - 1)
-                yNegativeArray = Array(newRange)
-            }else {
-                let newRange = -(maxCount - 1)...(maxCount - 1)
-                xNegativeArray = Array(newRange)
-            }
+            //在每列绘制时X坐标叠加
+            var tempOrignX = orignX
+            //在每行绘制时Y坐标叠加
+            var tempOrignY = orignY
             
-            for i in xNegativeArray {
-                for j in yNegativeArray {
-                    let point = CGPoint(x: 0 + singlePlaceWidth * CGFloat(i), y: deltaY * CGFloat(j))
-                    contents.draw(at: point, blendMode: .normal, alpha: alpha)
+            for i in  0..<(maxCount * maxCount) {
+                let rect = CGRect(x: tempOrignX, y: tempOrignY, width: imageSize.width, height: imageSize.height)
+                contents.draw(in: rect, blendMode: .normal, alpha: alpha)
+                if (i % maxCount == 0 && i != 0) {
+                    tempOrignX = orignX
+                    tempOrignY += (imageSize.height + lineSpace)
+                }else {
+                    tempOrignX += (imageSize.width + interSpace)
                 }
             }
             
@@ -178,7 +175,6 @@ struct TextWatermarkConfiguration: WatermarkConfigurationProtocol {
             //            let count = Int(ceil(diagonalLineWidth - cellSize.width) / singlePlaceWidth)
             let horCount = Int(ceil(diagonalLineWidth / singlePlaceWidth))
             let verCount = Int(ceil(diagonalLineWidth / singlePlaceHeight))
-            
             
             //此处计算出需要绘制水印文字的起始点，由于水印区域要大于图片区域所以起点在原有基础上移
             let orignX = -(diagonalLineWidth - pageBounds.width) / 2

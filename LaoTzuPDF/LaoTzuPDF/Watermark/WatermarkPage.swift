@@ -38,8 +38,8 @@ class WatermarkPage: PDFPage {
          string.draw(at: CGPoint(x:250, y:40), withAttributes: attributes)
          */
         
-                textWatermark(context: context, box: box)
-//        imageWatermark(context: context, box: box)
+//                textWatermark(context: context, box: box)
+        imageWatermark(context: context, box: box)
         
         context.restoreGState()
         UIGraphicsPopContext()
@@ -65,10 +65,10 @@ class WatermarkPage: PDFPage {
         
         let configuration = ImageWatermarkConfiguration.init(
             lineSpace: 10,
-            style: .center,
+            style: .tile,
             contents: R.image.foxIcon()!,
             alpha: 0.5,
-            angle: -70)
+            angle: -45)
         
         configuration.configurationProperties(in: self, context: context, box: box)
     }
