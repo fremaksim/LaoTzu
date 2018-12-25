@@ -46,7 +46,7 @@ struct ImageWatermarkConfiguration: WatermarkConfigurationProtocol {
         context.translateBy(x: 0.0, y: pageBounds.size.height)
         context.scaleBy(x: 1.0, y: -1.0)
         
- 
+        
         // image size
         let imageSize = contents.size
         switch style {
@@ -103,37 +103,13 @@ struct ImageWatermarkConfiguration: WatermarkConfigurationProtocol {
             // draw point
             let x = (pageBounds.width - imageSize.width) * 0.5
             let y = (pageBounds.height - imageSize.height) * 0.5
-            
-//            let distance = sqrt(pow(x, 2) + pow(y, 2))
             let point = CGPoint(x: x, y: y)
-//            contents.draw(at: point, blendMode: CGBlendMode.normal, alpha: alpha)
             
-            let image = WaterImage.getWaterMark(contents, angle: angle)
+            //            let image = WaterImage.getWaterMark(contents, angle: angle)
+            let image = WatermarkImage.watermarkImage(from: contents, angle: angle)
             image.draw(at: point, blendMode: CGBlendMode.normal, alpha: alpha)
             
-          /*  // rotate 45° counterClockwise (+ 顺时针，- 逆时针)
-            let radiusAngle: CGFloat
-            if angle != 0 {
-                radiusAngle = (CGFloat.pi / (180.0 / angle))
-            }else {
-                radiusAngle = 0
-            }
-            context.rotate(by: radiusAngle)
-            */
             
-          /*  if angle == 0 {
-                let point = CGPoint(x: x, y: y)
-                contents.draw(at: point, blendMode: CGBlendMode.normal, alpha: alpha)
-            }else if angle > 0 { // y negative half
-          
-                 contents.draw(at: CGPoint(x: distance , y: distance * sin(radiusAngle)), blendMode: .normal, alpha: alpha)
-                
-            }else { // x negative half
-                
-                // calcalate offset
-                 contents.draw(at: CGPoint(x: distance * sin(radiusAngle) , y: distance ), blendMode: .normal, alpha: alpha)
-            }
- */
         }
         
     }
@@ -250,19 +226,22 @@ struct TextWatermarkConfiguration: WatermarkConfigurationProtocol {
             context.translateBy(x: 0.0, y: pageBounds.size.height)
             context.scaleBy(x: 1.0, y: -1.0)
             
-            // rotate 45° counterClockwise (+ 顺时针，- 逆时针)
-            let radiusAngle: CGFloat
-            if angle != 0 {
-                radiusAngle = (CGFloat.pi / (180.0 / angle))
-            }else {
-                radiusAngle = 0
-            }
-            
             // draw point
             let x = (pageBounds.width - cellSize.width) * 0.5
             let y = (pageBounds.height - cellSize.height) * 0.5
             let point = CGPoint(x: x, y: y)
+            
+            let context = UIGraphicsGetCurrentContext()
+            
+            //将绘制原点（0，0）调整到源image的中心
+            context?.concatenate(CGAffineTransform(translationX: pageBounds.width/2, y: pageBounds.height/2))
+            //以绘制原点为中心旋转
+            context?.concatenate(CGAffineTransform(rotationAngle:  CGFloat.pi * angle / 180))
+            //将绘制原点恢复初始值，保证当前context中心和源image的中心处在一个点(当前context已经旋转，所以绘制出的任何layer都是倾斜的)
+            context?.concatenate(CGAffineTransform(translationX: -pageBounds.width/2, y: -pageBounds.height/2))
+            //先将原始image绘制上
             attributeString.draw(at: point)
+            
         }
     }
     

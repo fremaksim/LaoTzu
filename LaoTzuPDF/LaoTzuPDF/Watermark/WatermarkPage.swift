@@ -38,8 +38,8 @@ class WatermarkPage: PDFPage {
          string.draw(at: CGPoint(x:250, y:40), withAttributes: attributes)
          */
         
-//                textWatermark(context: context, box: box)
-        imageWatermark(context: context, box: box)
+                textWatermark(context: context, box: box)
+//        imageWatermark(context: context, box: box)
         
         context.restoreGState()
         UIGraphicsPopContext()
@@ -49,11 +49,11 @@ class WatermarkPage: PDFPage {
     private func textWatermark(context: CGContext, box: PDFDisplayBox){
         
         let configuration = TextWatermarkConfiguration.init(
-            style: .tile,
+            style: .center,
             contents: "mozheanquan",
             textColor: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5),
             font: UIFont.boldSystemFont(ofSize: 40),
-            angle: 0,
+            angle: 70,
             lineSpace: 20)
         
         
