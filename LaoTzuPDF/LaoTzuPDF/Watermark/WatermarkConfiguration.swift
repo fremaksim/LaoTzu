@@ -109,7 +109,6 @@ struct ImageWatermarkConfiguration: WatermarkConfigurationProtocol {
             let image = WatermarkImage.watermarkImage(from: contents, angle: angle)
             image.draw(at: point, blendMode: CGBlendMode.normal, alpha: alpha)
             
-            
         }
         
     }
@@ -149,7 +148,7 @@ struct TextWatermarkConfiguration: WatermarkConfigurationProtocol {
         
         switch style {
         case .tile:
-            let interSpace: CGFloat = 5.0
+            let interSpace: CGFloat = 20
             
             let attributeString = NSAttributedString(string: contents, attributes: attribues)
             let cellSize = attributeString.size()
@@ -160,59 +159,43 @@ struct TextWatermarkConfiguration: WatermarkConfigurationProtocol {
             context.translateBy(x: 0.0, y: pageBounds.size.height)
             context.scaleBy(x: 1.0, y: -1.0)
             
-            // rotate 45° counterClockwise (+ 顺时针，- 逆时针)
-            let radiusAngle: CGFloat
-            if angle != 0 {
-                radiusAngle = (CGFloat.pi / (180.0 / angle))
-            }else {
-                radiusAngle = 0
-            }
-            context.rotate(by: radiusAngle)
+            let context = UIGraphicsGetCurrentContext()
+            
+            //将绘制原点（0，0）调整到源image的中心
+            context?.concatenate(CGAffineTransform(translationX: pageBounds.width/2, y: pageBounds.height/2))
+            //以绘制原点为中心旋转
+            context?.concatenate(CGAffineTransform(rotationAngle:  CGFloat.pi * angle / 180))
+            //将绘制原点恢复初始值，保证当前context中心和源image的中心处在一个点(当前context已经旋转，所以绘制出的任何layer都是倾斜的)
+            context?.concatenate(CGAffineTransform(translationX: -pageBounds.width/2, y: -pageBounds.height/2))
+            
             // singlePlace width
             let singlePlaceWidth = cellSize.width + interSpace
-            
+            let singlePlaceHeight = cellSize.height + lineSpace
             // diagonal line width
             let diagonalLineWidth = sqrt(pow(pageBounds.width, 2) + pow(pageBounds.height, 2))
             
             // force ceil
-            let count = Int(ceil(diagonalLineWidth - cellSize.width) / singlePlaceWidth)
+            //            let count = Int(ceil(diagonalLineWidth - cellSize.width) / singlePlaceWidth)
+            let horCount = Int(ceil(diagonalLineWidth / singlePlaceWidth))
+            let verCount = Int(ceil(diagonalLineWidth / singlePlaceHeight))
             
-            let newAttributeString: NSMutableAttributedString = NSMutableAttributedString(attributedString: attributeString)
-            for _ in 0...count {
-                // inter placeholder
-                newAttributeString.append(NSMutableAttributedString(string:"        "))
-                newAttributeString.append(attributeString)
-            }
-            // maximun text width
-            let maximumTextWidth = newAttributeString.size().width
             
-            // draw Center
-            newAttributeString.draw(at: CGPoint.zero)
+            //此处计算出需要绘制水印文字的起始点，由于水印区域要大于图片区域所以起点在原有基础上移
+            let orignX = -(diagonalLineWidth - pageBounds.width) / 2
+            let orignY = -(diagonalLineWidth - pageBounds.height) / 2
             
-            let deltaY = (cellSize.height + lineSpace) / cos(radiusAngle)
-            let lineCount = Int(pageBounds.width / deltaY)
+            //在每列绘制时X坐标叠加
+            var tempOrignX = orignX
+            //在每行绘制时Y坐标叠加
+            var tempOrignY = orignY
             
-            // attach Y
-            let attachXAttributeString: NSMutableAttributedString = NSMutableAttributedString(attributedString: newAttributeString)
-            
-            if lineCount > 1 {
-                
-                let range = 1...lineCount
-                var negativeRage = (-lineCount)...(-1)
-                if angle <= 0 {
-                    negativeRage = (lineCount + 1)...(2 * lineCount)
-                }
-                let array = Array(range)
-                var negativeArray = Array(negativeRage)
-                negativeArray.append(contentsOf: array)
-                
-                for i in negativeArray {
-                    // angle is postive
-                    if angle > 0 {
-                        attachXAttributeString.draw(at: CGPoint(x: 0, y: deltaY * CGFloat(i)))
-                    }else{// angle is negative
-                        attachXAttributeString.draw(at: CGPoint(x: -maximumTextWidth * 0.5, y: deltaY * CGFloat(i)))
-                    }
+            for i in  0..<(horCount * verCount) {
+                attributeString.draw(in: CGRect(x: tempOrignX, y: tempOrignY, width: cellSize.width, height: cellSize.height))
+                if (i % horCount == 0 && i != 0) {
+                    tempOrignX = orignX
+                    tempOrignY += (cellSize.height + lineSpace)
+                }else {
+                    tempOrignX += (cellSize.width + interSpace)
                 }
             }
             

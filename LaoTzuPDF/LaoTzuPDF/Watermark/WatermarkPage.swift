@@ -49,11 +49,11 @@ class WatermarkPage: PDFPage {
     private func textWatermark(context: CGContext, box: PDFDisplayBox){
         
         let configuration = TextWatermarkConfiguration.init(
-            style: .center,
+            style: .tile,
             contents: "mozheanquan",
             textColor: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5),
             font: UIFont.boldSystemFont(ofSize: 40),
-            angle: 70,
+            angle: 0,
             lineSpace: 20)
         
         
