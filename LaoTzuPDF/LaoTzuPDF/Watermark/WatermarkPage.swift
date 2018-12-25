@@ -38,20 +38,39 @@ class WatermarkPage: PDFPage {
          string.draw(at: CGPoint(x:250, y:40), withAttributes: attributes)
          */
         
-        let configuration = WatermarkConfiguration.init(
-            style: .tile,
-            contents: "mozheanquan",
-            textColor: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5),
-            font: UIFont.boldSystemFont(ofSize: 40),
-            angle: 45.0,
-            lineSpace: 20)
-        
-         
-        configuration.configurationProperties(in: self, context: context, box: box)
+//                textWatermark(context: context, box: box)
+        imageWatermark(context: context, box: box)
         
         context.restoreGState()
         UIGraphicsPopContext()
         
+    }
+    
+    private func textWatermark(context: CGContext, box: PDFDisplayBox){
+        
+        let configuration = TextWatermarkConfiguration.init(
+            style: .tile,
+            contents: "mozheanquan",
+            textColor: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5),
+            font: UIFont.boldSystemFont(ofSize: 40),
+            angle: 0,
+            lineSpace: 20)
+        
+        
+        configuration.configurationProperties(in: self, context: context, box: box)
+        
+    }
+    
+    private func imageWatermark(context: CGContext, box: PDFDisplayBox){
+        
+        let configuration = ImageWatermarkConfiguration.init(
+            lineSpace: 10,
+            style: .center,
+            contents: R.image.foxIcon()!,
+            alpha: 0.5,
+            angle: -70)
+        
+        configuration.configurationProperties(in: self, context: context, box: box)
     }
     
     
