@@ -12,5 +12,6 @@ target 'LaoTzuPDF' do
 
 pod 'R.swift'
 pod 'SwiftyBeaver'
+pod 'CryptoSwift', :git => "https://github.com/krzyzanowskim/CryptoSwift", :branch => "master"
 
 end

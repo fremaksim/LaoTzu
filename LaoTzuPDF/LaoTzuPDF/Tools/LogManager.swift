@@ -12,10 +12,13 @@ import SwiftyBeaver
 
 public struct Log {
     
+    private static let _log = SwiftyBeaver.self
+    
     static func output() -> SwiftyBeaver.Type {
-        let log = SwiftyBeaver.self
-        configurationLog(log: log)
-        return log
+//        DispatchQueue.global().sync {
+//            configurationLog(log: _log)
+//        }
+        return _log
     }
     
     static private func configurationLog(log: SwiftyBeaver.Type){

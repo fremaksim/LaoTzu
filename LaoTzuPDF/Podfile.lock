@@ -1,10 +1,12 @@
 PODS:
+  - CryptoSwift (0.13.1)
   - R.swift (4.0.0):
     - R.swift.Library (~> 4.0.0)
   - R.swift.Library (4.0.0)
   - SwiftyBeaver (1.6.1)
 
 DEPENDENCIES:
+  - CryptoSwift (from `https://github.com/krzyzanowskim/CryptoSwift`, branch `master`)
   - R.swift
   - SwiftyBeaver
 
@@ -14,11 +16,22 @@ SPEC REPOS:
     - R.swift.Library
     - SwiftyBeaver
 
+EXTERNAL SOURCES:
+  CryptoSwift:
+    :branch: master
+    :git: https://github.com/krzyzanowskim/CryptoSwift
+
+CHECKOUT OPTIONS:
+  CryptoSwift:
+    :commit: 288692d159d1babc245a031dc59be759efd531bc
+    :git: https://github.com/krzyzanowskim/CryptoSwift
+
 SPEC CHECKSUMS:
+  CryptoSwift: ff68c35a53e03177d31aaa2c1e8b3e010aeed6cb
   R.swift: d6a5ec2f55a8441dc0ed9f1f8b37d7d11ae85c66
   R.swift.Library: c3af34921024333546e23b70e70d0b4e0cffca75
   SwiftyBeaver: ccfcdf85a04d429f1633f668650b0ce8020bda3a
 
-PODFILE CHECKSUM: 6bb4cc17058e350cc3bd5ce1206a229b63f8a0cd
+PODFILE CHECKSUM: f873e719869d3234396081ac9c364f7594ec3288
 
 COCOAPODS: 1.6.0.beta.2

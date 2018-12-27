@@ -9,6 +9,7 @@
 import UIKit
 import PDFKit
 import PDFKit.PDFSelection
+//import CommonCrypto
 
 enum DocumentViewUserAction {
     case none
@@ -123,7 +124,7 @@ class DocumentViewController: UIViewController {
     }
     
     deinit {
-        Log.output().debug("deinit")
+        LogManager.shared.log.debug("deinit")
     }
     
     private func loadDocument(){
@@ -143,7 +144,7 @@ class DocumentViewController: UIViewController {
                 // watermark 1
                 document.delegate = self
                 self.pdfView.document = document
-            
+                
                 self.moveToLastReadingProsess()
                 if self.pdfView.displayDirection == .vertical {
                     self.getScaleFactorForSizeToFit()
@@ -293,9 +294,9 @@ class DocumentViewController: UIViewController {
         
         guard let userInfo = noti.userInfo else { return }
         
-        //        Log.output().info(userInfo)
+        //        LogManager.shared.log.info(userInfo)
         if let annotation = userInfo["PDFAnnotationHit"] as? PDFAnnotation {
-            Log.output().info(annotation.annotationKeyValues)
+            LogManager.shared.log.info(annotation.annotationKeyValues)
             let convertRect = pdfView.convert(annotation.bounds, from: annotation.page!)
             
             let scale: CGFloat = 4.0
@@ -368,26 +369,133 @@ class DocumentViewController: UIViewController {
         let copyURL = URL(fileURLWithPath: DocumentFileFolder.LaoTzuDocumentFileCopyPath, isDirectory: false)
         if !FileManager.default.fileExists(atPath: copyURL.path) {
             do {
-               try FileManager.default.createDirectory(at: copyURL, withIntermediateDirectories: true, attributes: nil)
+                try FileManager.default.createDirectory(at: copyURL, withIntermediateDirectories: true, attributes: nil)
             }catch {
-                Log.output().error(error)
+                LogManager.shared.log.error(error)
             }
         }
         
         let fileName: String = "Se7enCopy.pdf"
         let url: URL = copyURL.appendingPathComponent(fileName)
-        Log.output().info(url)
+        let dataFileName: String = "Se7enData.pdf"
+        let dataURL: URL = copyURL.appendingPathComponent(dataFileName)
+        LogManager.shared.log.info(url)
         if  document.write(to: url, withOptions: nil) {
-            Log.output().debug("write to path \(url.path) success!")
+            LogManager.shared.log.debug("write to path \(url.path) success!")
+        }
+        
+        // 字节操作
+        let newDocument = PDFDocument(url: url)
+        if var newData = newDocument?.dataRepresentation() {
+            let cafe: Data = "Orange".data(using: .utf8)!// non-nil
+            
+            LogManager.shared.log.info("*before*: data bytes: \(newData.count)")
+            //  *before*: data bytes: 23131808
+            /*
+             let before = newData.count
+             newData.append(cafe)
+             //  *after*: appended data bytes: 23131814
+             LogManager.shared.log.info("*after*: appended data bytes: \(newData.count)")
+             let length = newData.count - before
+             
+             let t: Int32 =  newData.scanValue(start: before, length: length)
+             LogManager.shared.log.debug(t)
+             let cafeData = newData.subdata(in: before..<(before+length))
+             if let cafeString = String(bytes: cafeData, encoding: .utf8) {
+             LogManager.shared.log.info(cafeString)
+             }
+             if let documentNew = PDFDocument(data: newData) {
+             LogManager.shared.log.info(" done !!!!!")
+             // 这方法不带 append data
+             if  documentNew.write(to: url, withOptions: [PDFDocumentWriteOption.userPasswordOption : "123",PDFDocumentWriteOption.mozheOption : "ppx"]) {
+             LogManager.shared.log.debug("write to path \(url.path) success! again!!")
+             }
+             do {
+             // 带 append data， 也能解析PDF信息
+             try newData.write(to: dataURL)
+             LogManager.shared.log.debug("write newData to path \(dataURL.path) success!")
+             }catch {
+             LogManager.shared.log.debug(error.localizedDescription)
+             }
+             }
+             */
+            // 加解密
+            DispatchQueue.global().async {
+                do {
+                    let password = "123456"
+                    let salt = AES256Crypter.randomSalt()
+                    let iv   = AES256Crypter.randomIv()
+                    let key  = try AES256Crypter.createKey(password: password.data(using: .utf8)!, salt: salt)
+                    let aes  = try AES256Crypter(key: key, iv: iv)
+                    
+                    let encryptedData = try aes.encrypt(newData) // pdf file
+                    
+                    DispatchQueue.main.async {
+                        print("encrypted success!",Date())
+                    }
+                    //            let decryptedData = try aes.decrypt(encryptedData)
+                    DispatchQueue.main.async {
+                        print("deencrypted success!",Date())
+                    }
+                    // 22.06Mb Encrypto needed 9s, all so need for with dencrypto, total 18s
+                    
+                    let fileType = "%PDF-"
+                    let endOfFile = "%%EOF"
+                    let headerData = fileType.data(using: .utf8)!
+                    var fileTypeData = headerData
+                    let endOfFileData = endOfFile.data(using: .utf8)!
+                    
+                    fileTypeData.append(encryptedData)
+                    fileTypeData.append(endOfFileData)
+                    fileTypeData.append(cafe)
+                    
+                    let targetPath = url.path.replacingOccurrences(of: "Se7enCopy.pdf", with: "Se7enDataEncrypted.file")
+                    
+                    print(targetPath)
+                    let targetURL = URL(fileURLWithPath: targetPath)
+                    print(targetURL)
+                    try fileTypeData.write(to: targetURL)
+                    LogManager.shared.log.info("write newData success")
+                    
+                    //去掉头
+                    let notHeadFileData = fileTypeData.subdata(in: headerData.count..<fileTypeData.count)
+                    
+                    FindEOF.findEncrypted(data: notHeadFileData, completion: { (index, isSuccess) in
+                        if isSuccess {
+                            if let start = index?.0,
+                                let end   = index?.1 {
+                                do{
+                                    let encryptPdfData = fileTypeData.subdata(in: headerData.count..<start)
+                                    let decryptPdfData = try aes.decrypt(encryptPdfData)
+                                    let newtargetPath = url.path.replacingOccurrences(of: "Se7enCopy.pdf", with: "Se7enDataDencrypted.pdf")
+                                    let newtargetURL = URL(fileURLWithPath: newtargetPath)
+                                    try  decryptPdfData.write(to: newtargetURL)
+                                    LogManager.shared.log.info("find pdf success!")
+                                    let privateData = fileTypeData.subdata(in: end..<fileTypeData.count)
+                                    if let privateString = String(data: privateData, encoding: .utf8){
+                                        LogManager.shared.log.debug(privateString)
+                                    }
+                                }catch{
+                                    LogManager.shared.log.error(error)
+                                }
+                            }
+                        }
+                    })
+                    
+                } catch  {
+                    LogManager.shared.log.error("encrypto failer")
+                    LogManager.shared.log.error(error)
+                }
+            }
         }
     }
     
     @IBAction func findAction(_ sender: UIBarButtonItem) {
         if let selections =  pdfView.document?.findString("mozheanquan", withOptions: NSString.CompareOptions.literal) {
             for sel in selections {
-                Log.output().debug(sel.string ?? "")
+                LogManager.shared.log.debug(sel.string ?? "")
                 if sel.string == "mozheanquan" {
-                    Log.output().debug(selections.count)
+                    LogManager.shared.log.debug(selections.count)
                     break
                 }
             }
@@ -436,7 +544,7 @@ class DocumentViewController: UIViewController {
         textAnnotation.fontColor = UIColor.purple
         currentPage.addAnnotation(textAnnotation)
         
- 
+        
         
         
         //        documentPickerAction()
@@ -464,7 +572,7 @@ extension DocumentViewController: UIPopoverPresentationControllerDelegate {
 
 extension DocumentViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        Log.output().info(urls)
+        LogManager.shared.log.info(urls)
         if let fileURL = urls.first,
             fileURL.isFileURL{
             
@@ -476,7 +584,7 @@ extension DocumentViewController: UIDocumentPickerDelegate {
             documentBrowserViewController.revealDocument(at: fileURL, importIfNeeded: true) { (revealedDocumentURL, error) in
                 if let error = error {
                     // Handle the error appropriately
-                    Log.output().error("Failed to reveal the document at URL \(fileURL) with error: '\(error)'")
+                    LogManager.shared.log.error("Failed to reveal the document at URL \(fileURL) with error: '\(error)'")
                     return
                 }
                 if let _ = revealedDocumentURL {
