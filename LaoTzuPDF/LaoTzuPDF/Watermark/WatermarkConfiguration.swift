@@ -10,12 +10,18 @@ import Foundation
 import UIKit
 import PDFKit
 
-enum WatermarkStyle {
-    case tile   //平铺
-    case center //居中
+enum WatermarkType: Int, Codable {
+    case text = 0
+    case image = 1
+}
+
+enum WatermarkStyle: Int, Codable {
+    case tile = 0   //平铺
+    case center = 1 //居中
 }
 
 protocol WatermarkConfigurationProtocol {
+//    var type: WatermarkType { get  set}
     var style: WatermarkStyle {get set}
     //    var contents: Any {get set}
     var angle: CGFloat {get set}
@@ -24,8 +30,13 @@ protocol WatermarkConfigurationProtocol {
     func configurationProperties(in page: PDFPage , context: CGContext, box: PDFDisplayBox)
 }
 
+extension WatermarkConfigurationProtocol {
+    func configurationProperties(in page: PDFPage , context: CGContext, box: PDFDisplayBox) {}
+}
+
 //MARK: - Image watermark
 struct ImageWatermarkConfiguration: WatermarkConfigurationProtocol {
+//    var type: WatermarkType = .image
     
     var lineSpace: CGFloat
     
@@ -114,6 +125,8 @@ struct ImageWatermarkConfiguration: WatermarkConfigurationProtocol {
 
 //MARK: - Text watermark
 struct TextWatermarkConfiguration: WatermarkConfigurationProtocol {
+    
+//    let type: WatermarkType = .text
     
     /// 样式
     var style: WatermarkStyle = .tile

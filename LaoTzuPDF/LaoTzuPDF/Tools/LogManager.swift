@@ -10,6 +10,7 @@ import Foundation
 import SwiftyBeaver
 
 
+// can be multi-copy in memory
 public struct Log {
     
     private static let _log = SwiftyBeaver.self
@@ -59,7 +60,7 @@ public struct Log {
     }
 }
 
-
+// only one in memory,  user this is recommended
 final class LogManager {
     
     static let shared = LogManager()

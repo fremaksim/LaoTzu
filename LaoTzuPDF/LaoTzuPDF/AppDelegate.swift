@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import IQKeyboardManagerSwift
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -18,9 +18,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         Log.output().info(DocumentFileFolder.LaoTzuDocumentFileFolder)
+        IQKeyboardManager.shared.enable = true
+      let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last!
+      LogManager.shared.log.debug(path)
         
         return true
     }
+    /// 获取所有字体
+//    func getAllSystemFonts() {
+//        UIFont.familyNames.map {
+//            UIFont.fontNames(forFamilyName: $0)
+//            }.forEach { (fonts:[String]) in
+//                fonts.forEach({ print($0) })
+//        }
+//    }
+    
     
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

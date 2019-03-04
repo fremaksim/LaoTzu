@@ -61,6 +61,12 @@ public struct FindEOF {
         }
     }
     
+    /// Find end of file flag %%EOF,backward search within specified bytes, default is 1000 bytes
+    /// %%EOF is not decrypt
+    /// - Parameters:
+    ///   - data: Source data
+    ///   - threshold: backward search zone
+    ///   - completion: if true carry on %%EOF (start,end) else return (nil,false)
     static func findEncrypted(data: Data,
                               threshold: Int = 1000,
                               completion: @escaping (_ : (Int, Int)?,_ : Bool)->()){

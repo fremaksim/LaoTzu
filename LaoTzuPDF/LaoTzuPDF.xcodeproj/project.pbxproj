@@ -11,6 +11,8 @@
 		6A148EAD21BA0D7400F196E8 /* WatermarkConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A148EAC21BA0D7400F196E8 /* WatermarkConfiguration.swift */; };
 		6A297DFC21D46F170028E96E /* AES256Crypter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A297DFB21D46F170028E96E /* AES256Crypter.swift */; };
 		6A297E0421D49D170028E96E /* FindEOF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A297E0321D49D170028E96E /* FindEOF.swift */; };
+		6A5152BD21E3530F00523030 /* WatermarkTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5152BC21E3530F00523030 /* WatermarkTransferModel.swift */; };
+		6A5152BF21E37A6000523030 /* NSNotification+Names.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5152BE21E37A6000523030 /* NSNotification+Names.swift */; };
 		6A79ACD221D234C00095FA51 /* WaterImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A79ACD121D234C00095FA51 /* WaterImage.m */; };
 		6A79ACD421D23FDA0095FA51 /* WatermarkImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A79ACD321D23FDA0095FA51 /* WatermarkImage.swift */; };
 		6A79ACD621D30E000095FA51 /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A79ACD521D30E000095FA51 /* DataExtension.swift */; };
@@ -31,6 +33,10 @@
 		6A7C5A2421B7E86E006E502E /* DocumentFileFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A2321B7E86E006E502E /* DocumentFileFolder.swift */; };
 		6A7C5A2621B8C7F2006E502E /* AnnotationPopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A2521B8C7F2006E502E /* AnnotationPopView.swift */; };
 		6A7C5A2921B8ECD5006E502E /* WatermarkPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C5A2821B8ECD5006E502E /* WatermarkPage.swift */; };
+		6AE91F3721E3336D000E316C /* WatermarkConfigurationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE91F3621E3336D000E316C /* WatermarkConfigurationViewModel.swift */; };
+		6AE91F3A21E335A3000E316C /* WatermarkConfigurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE91F3821E335A2000E316C /* WatermarkConfigurationViewController.swift */; };
+		6AE91F3B21E335A3000E316C /* WatermarkConfigurationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AE91F3921E335A2000E316C /* WatermarkConfigurationViewController.xib */; };
+		6AE91F3D21E33DAA000E316C /* WaterConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE91F3C21E33DAA000E316C /* WaterConfigurationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +44,8 @@
 		6A148EAC21BA0D7400F196E8 /* WatermarkConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatermarkConfiguration.swift; sourceTree = "<group>"; };
 		6A297DFB21D46F170028E96E /* AES256Crypter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES256Crypter.swift; sourceTree = "<group>"; };
 		6A297E0321D49D170028E96E /* FindEOF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindEOF.swift; sourceTree = "<group>"; };
+		6A5152BC21E3530F00523030 /* WatermarkTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatermarkTransferModel.swift; sourceTree = "<group>"; };
+		6A5152BE21E37A6000523030 /* NSNotification+Names.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotification+Names.swift"; sourceTree = "<group>"; };
 		6A79ACD021D234C00095FA51 /* WaterImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaterImage.h; sourceTree = "<group>"; };
 		6A79ACD121D234C00095FA51 /* WaterImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WaterImage.m; sourceTree = "<group>"; };
 		6A79ACD321D23FDA0095FA51 /* WatermarkImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatermarkImage.swift; sourceTree = "<group>"; };
@@ -63,6 +71,10 @@
 		6A7C5A2321B7E86E006E502E /* DocumentFileFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileFolder.swift; sourceTree = "<group>"; };
 		6A7C5A2521B8C7F2006E502E /* AnnotationPopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationPopView.swift; sourceTree = "<group>"; };
 		6A7C5A2821B8ECD5006E502E /* WatermarkPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatermarkPage.swift; sourceTree = "<group>"; };
+		6AE91F3621E3336D000E316C /* WatermarkConfigurationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatermarkConfigurationViewModel.swift; sourceTree = "<group>"; };
+		6AE91F3821E335A2000E316C /* WatermarkConfigurationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatermarkConfigurationViewController.swift; sourceTree = "<group>"; };
+		6AE91F3921E335A2000E316C /* WatermarkConfigurationViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WatermarkConfigurationViewController.xib; sourceTree = "<group>"; };
+		6AE91F3C21E33DAA000E316C /* WaterConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterConfigurationView.swift; sourceTree = "<group>"; };
 		7368ED1B7BFA046D2F66B587 /* Pods-LaoTzuPDF.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LaoTzuPDF.debug.xcconfig"; path = "Target Support Files/Pods-LaoTzuPDF/Pods-LaoTzuPDF.debug.xcconfig"; sourceTree = "<group>"; };
 		AE08F918D806A4AC04BCAF89 /* Pods_LaoTzuPDF.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LaoTzuPDF.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -110,6 +122,7 @@
 		6A7C59DF21B6A262006E502E /* LaoTzuPDF */ = {
 			isa = PBXGroup;
 			children = (
+				6AE91F3221E332B0000E316C /* Test */,
 				6A297DFA21D46EC50028E96E /* Encrypt */,
 				6A7C5A2721B8ECB2006E502E /* Watermark */,
 				6A7C5A0A21B7BDB2006E502E /* Extensions */,
@@ -186,6 +199,7 @@
 				6A7C5A0B21B7BDDA006E502E /* UImageExtension.swift */,
 				6A7C5A2121B7D94D006E502E /* UIViewControllerExtension.swift */,
 				6A79ACD521D30E000095FA51 /* DataExtension.swift */,
+				6A5152BE21E37A6000523030 /* NSNotification+Names.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -207,6 +221,26 @@
 				6A79ACD021D234C00095FA51 /* WaterImage.h */,
 				6A79ACD121D234C00095FA51 /* WaterImage.m */,
 				6A79ACD321D23FDA0095FA51 /* WatermarkImage.swift */,
+			);
+			path = Watermark;
+			sourceTree = "<group>";
+		};
+		6AE91F3221E332B0000E316C /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				6AE91F3321E332C3000E316C /* Watermark */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
+		6AE91F3321E332C3000E316C /* Watermark */ = {
+			isa = PBXGroup;
+			children = (
+				6AE91F3621E3336D000E316C /* WatermarkConfigurationViewModel.swift */,
+				6AE91F3821E335A2000E316C /* WatermarkConfigurationViewController.swift */,
+				6AE91F3921E335A2000E316C /* WatermarkConfigurationViewController.xib */,
+				6AE91F3C21E33DAA000E316C /* WaterConfigurationView.swift */,
+				6A5152BC21E3530F00523030 /* WatermarkTransferModel.swift */,
 			);
 			path = Watermark;
 			sourceTree = "<group>";
@@ -292,6 +326,7 @@
 			files = (
 				6A7C59EB21B6A263006E502E /* LaunchScreen.storyboard in Resources */,
 				6A7C59E821B6A263006E502E /* Assets.xcassets in Resources */,
+				6AE91F3B21E335A3000E316C /* WatermarkConfigurationViewController.xib in Resources */,
 				6A7C59E621B6A262006E502E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,6 +384,8 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-LaoTzuPDF/Pods-LaoTzuPDF-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Mummy/Mummy.framework",
 				"${BUILT_PRODUCTS_DIR}/R.swift.Library/Rswift.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyBeaver/SwiftyBeaver.framework",
 			);
@@ -357,6 +394,8 @@
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mummy.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Rswift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyBeaver.framework",
 			);
@@ -372,8 +411,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AE91F3A21E335A3000E316C /* WatermarkConfigurationViewController.swift in Sources */,
 				6A297DFC21D46F170028E96E /* AES256Crypter.swift in Sources */,
 				6A148EAD21BA0D7400F196E8 /* WatermarkConfiguration.swift in Sources */,
+				6AE91F3721E3336D000E316C /* WatermarkConfigurationViewModel.swift in Sources */,
 				6A7C5A0E21B7C927006E502E /* LogManager.swift in Sources */,
 				6A7C5A2021B7D62C006E502E /* PAirSandbox.m in Sources */,
 				6A7C5A2421B7E86E006E502E /* DocumentFileFolder.swift in Sources */,
@@ -381,6 +422,8 @@
 				6A7C59F921B766FE006E502E /* Document.swift in Sources */,
 				6A7C5A2921B8ECD5006E502E /* WatermarkPage.swift in Sources */,
 				6A79ACD621D30E000095FA51 /* DataExtension.swift in Sources */,
+				6A5152BD21E3530F00523030 /* WatermarkTransferModel.swift in Sources */,
+				6AE91F3D21E33DAA000E316C /* WaterConfigurationView.swift in Sources */,
 				6A7C59FE21B7A33B006E502E /* MaskPopViewController.swift in Sources */,
 				6A7C5A0921B7BA48006E502E /* AnnotationsViewController.swift in Sources */,
 				6A7C59F521B7656F006E502E /* DocumentViewController.swift in Sources */,
@@ -391,6 +434,7 @@
 				6A79ACD221D234C00095FA51 /* WaterImage.m in Sources */,
 				6A7C5A2221B7D94D006E502E /* UIViewControllerExtension.swift in Sources */,
 				6A7C5A0221B7B47C006E502E /* R.generated.swift in Sources */,
+				6A5152BF21E37A6000523030 /* NSNotification+Names.swift in Sources */,
 				6A297E0421D49D170028E96E /* FindEOF.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -551,7 +595,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "LaoTzuPDF-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -573,7 +617,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mozheanquan.LaoTzuPDF;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "LaoTzuPDF-Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

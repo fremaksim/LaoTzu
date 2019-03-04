@@ -10,10 +10,16 @@ import UIKit
 
 struct WatermarkImage {
     
+    /// 原始图片旋转angle后的图片
+    ///
+    /// - Parameters:
+    ///   - originalImage: 原始图片
+    ///   - angle: 旋转角度
+    /// - Returns: 旋转后的新图
     static func watermarkImage(from originalImage: UIImage, angle: CGFloat) -> UIImage {
         
         //原始image的宽高
-        let viewWidth = originalImage.size.width
+        let viewWidth  = originalImage.size.width
         let viewHeight = originalImage.size.height
         
         //为了防止图片失真，绘制区域宽高和原始图片宽高一样

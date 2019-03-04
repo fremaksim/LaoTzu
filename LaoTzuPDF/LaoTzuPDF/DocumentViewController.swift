@@ -32,6 +32,8 @@ extension DocumentViewController {
 
 class DocumentViewController: UIViewController {
     
+    var watermarkLayer: AnyClass = PDFPage.self
+    
     @IBOutlet weak var pdfView: PDFView!
     
     var document: Document?
@@ -94,6 +96,9 @@ class DocumentViewController: UIViewController {
         center.addObserver(self,
                            selector: #selector(didHitAnnotation), name: NSNotification.Name.PDFViewAnnotationHit, object: nil)
         
+        // 测试 for watermark configuration
+        center.addObserver(self, selector: #selector(waterConfigurationSaved(_:)), name: NSNotification.Name.WaterConfigurationSaved, object: nil)
+        
         view.addSubview(editButton)
         NSLayoutConstraint.activate([
             editButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
@@ -121,6 +126,7 @@ class DocumentViewController: UIViewController {
         navigationController?.hidesBarsOnTap = true
         
         loadDocument()
+        
     }
     
     deinit {
@@ -340,6 +346,40 @@ class DocumentViewController: UIViewController {
         navigationController?.barHideOnTapGestureRecognizer.isEnabled = true
     }
     
+    @objc func waterConfigurationSaved(_ noti: Notification) {
+        watermarkLayer = WatermarkPage.self
+        
+//        loadDocument()
+//        pdfView.setNeedsDisplay()
+        
+        // Access the document
+        document?.open(completionHandler: { (success) in
+            if success {
+                // Display the content of the document, e.g.:
+                self.navigationItem.title = self.document?.localizedName
+                
+                guard let pdfURL: URL = (self.document?.fileURL) else { return }
+                guard let document = PDFDocument(url: pdfURL) else { return }
+                
+                // self.allowsDocumentAssembly = document.allowsDocumentAssembly
+                self.isEncrypted = document.isEncrypted
+                
+                // watermark 1
+                document.delegate = self
+                self.pdfView.document = document
+                
+                self.moveToLastReadingProsess()
+                if self.pdfView.displayDirection == .vertical {
+                    self.getScaleFactorForSizeToFit()
+                }
+                
+                self.setPDFThumbnailView()
+            } else {
+                // Make sure to handle the failed import appropriately, e.g., by presenting an error message to the user.
+            }
+        })
+    }
+    
     private func cleanAnnotationPopView() {
         view.subviews.filter { (view) -> Bool in
             view is AnnotationPopView
@@ -354,6 +394,17 @@ class DocumentViewController: UIViewController {
             self.saveAndClose()
         }
     }
+    
+    @IBAction func watermarkTest(_ sender: Any) {
+        
+        let waterConfigurationVC = WatermarkConfigurationViewController()
+//        navigationController?.pushViewController(waterConfigurationVC, animated: true)
+        let navi = UINavigationController(rootViewController: waterConfigurationVC)
+        present(navi, animated: true, completion: nil)
+  
+        
+    }
+    
     
     @IBAction func shareAction() {
         let activityVC = UIActivityViewController(activityItems: [document?.fileURL as Any], applicationActivities: nil)
@@ -375,10 +426,10 @@ class DocumentViewController: UIViewController {
             }
         }
         
-        let fileName: String = "Se7enCopy.pdf"
+        let fileName: String = "Se7enCopy"
         let url: URL = copyURL.appendingPathComponent(fileName)
         let dataFileName: String = "Se7enData.pdf"
-        let dataURL: URL = copyURL.appendingPathComponent(dataFileName)
+        let _: URL = copyURL.appendingPathComponent(dataFileName)
         LogManager.shared.log.info(url)
         if  document.write(to: url, withOptions: nil) {
             LogManager.shared.log.debug("write to path \(url.path) success!")
@@ -543,10 +594,7 @@ class DocumentViewController: UIViewController {
         textAnnotation.iconType = .note
         textAnnotation.fontColor = UIColor.purple
         currentPage.addAnnotation(textAnnotation)
-        
-        
-        
-        
+    
         //        documentPickerAction()
     }
 }
@@ -554,7 +602,8 @@ class DocumentViewController: UIViewController {
 extension DocumentViewController: PDFDocumentDelegate {
     // Watermark 2
     func classForPage() -> AnyClass {
-        return WatermarkPage.self
+//        return WatermarkPage.self
+        return watermarkLayer
     }
 }
 

@@ -8,8 +8,15 @@
 
 import Foundation
 import PDFKit
+import Mummy
 
 class WatermarkPage: PDFPage {
+    
+    override init() {
+        super.init()
+        
+        
+    }
     
     // 3. Override PDFPage custom draw
     /// - Tag: OverrideDraw
@@ -38,8 +45,39 @@ class WatermarkPage: PDFPage {
          string.draw(at: CGPoint(x:250, y:40), withAttributes: attributes)
          */
         
+        //                textWatermark(context: context, box: box)
+        //        imageWatermark(context: context, box: box)
+        
+        // load data from memery
+//        do {
+//            let data = try Data(contentsOf: URL(fileURLWithPath: WatermarkTransferModel.savedPath))
+//
+//            let decoder = JSONDecoder()
+//            let watermarkTransferModel = try decoder.decode(WatermarkTransferModel.self, from: data)
+            let watermarkTransferModel = MummyCaches.shared.retrieve(WatermarkTransferModel.defaultFilename, from: Directory.documents, as: WatermarkTransferModel.self)
+            
+            // 根据类型展示不同样式
+            switch watermarkTransferModel.type {
+                //TODO: - paraser type detail
+            case .text:
 //                textWatermark(context: context, box: box)
-        imageWatermark(context: context, box: box)
+                let configuration = TextWatermarkConfiguration.init(
+                    style: watermarkTransferModel.style,
+                    contents: watermarkTransferModel.text!,
+                    textColor: UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: watermarkTransferModel.alpha),
+                    font: UIFont.boldSystemFont(ofSize: watermarkTransferModel.fontScale!),
+                    angle: watermarkTransferModel.angle,
+                    lineSpace: watermarkTransferModel.lineSpace)
+                 configuration.configurationProperties(in: self, context: context, box: box)
+                
+            case .image:
+                imageWatermark(context: context, box: box)
+            }
+            
+//        } catch  {
+//            fatalError("load  WatermarkTransferModel failed1!!")
+//        }
+        
         
         context.restoreGState()
         UIGraphicsPopContext()

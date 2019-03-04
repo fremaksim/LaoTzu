@@ -52,11 +52,18 @@
                         <viewLayoutGuide key="safeArea" id="jYy-If-XaP"/>
                     </view>
                     <navigationItem key="navigationItem" id="osA-sE-psT">
-                        <barButtonItem key="leftBarButtonItem" title="返回" id="pel-Tt-X12">
-                            <connections>
-                                <action selector="dismissDocumentViewController" destination="XCy-Tj-g81" id="AF1-Fr-JIA"/>
-                            </connections>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem title="返回" id="pel-Tt-X12">
+                                <connections>
+                                    <action selector="dismissDocumentViewController" destination="XCy-Tj-g81" id="AF1-Fr-JIA"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Watermark" id="WO6-Ru-xsF">
+                                <connections>
+                                    <action selector="watermarkTest:" destination="XCy-Tj-g81" id="Tq9-re-JXN"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                         <rightBarButtonItems>
                             <barButtonItem title="分享" id="DDi-6o-YDL">
                                 <connections>

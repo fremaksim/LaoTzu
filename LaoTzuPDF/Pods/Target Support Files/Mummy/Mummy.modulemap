@@ -1,0 +1,6 @@
+framework module Mummy {
+  umbrella header "Mummy-umbrella.h"
+
+  export *
+  module * { export * }
+}

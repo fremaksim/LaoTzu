@@ -51,8 +51,16 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
   
-  /// This `R.nib` struct is generated, and contains static references to 0 nibs.
+  /// This `R.nib` struct is generated, and contains static references to 1 nibs.
   struct nib {
+    /// Nib `WatermarkConfigurationViewController`.
+    static let watermarkConfigurationViewController = _R.nib._WatermarkConfigurationViewController()
+    
+    /// `UINib(name: "WatermarkConfigurationViewController", in: bundle)`
+    static func watermarkConfigurationViewController(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.watermarkConfigurationViewController)
+    }
+    
     fileprivate init() {}
   }
   
@@ -110,6 +118,17 @@ struct _R: Rswift.Validatable {
   }
   
   struct nib {
+    struct _WatermarkConfigurationViewController: Rswift.NibResourceType {
+      let bundle = R.hostingBundle
+      let name = "WatermarkConfigurationViewController"
+      
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [NSObject : AnyObject]? = nil) -> WaterConfigurationView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? WaterConfigurationView
+      }
+      
+      fileprivate init() {}
+    }
+    
     fileprivate init() {}
   }
   
