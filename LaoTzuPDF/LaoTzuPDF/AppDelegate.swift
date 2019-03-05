@@ -8,30 +8,31 @@
 
 import UIKit
 import IQKeyboardManagerSwift
+import MoAESCryptor
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
         Log.output().info(DocumentFileFolder.LaoTzuDocumentFileFolder)
         IQKeyboardManager.shared.enable = true
-      let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last!
-      LogManager.shared.log.debug(path)
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last!
+        LogManager.shared.log.debug(path)
         
         return true
     }
     /// 获取所有字体
-//    func getAllSystemFonts() {
-//        UIFont.familyNames.map {
-//            UIFont.fontNames(forFamilyName: $0)
-//            }.forEach { (fonts:[String]) in
-//                fonts.forEach({ print($0) })
-//        }
-//    }
+    //    func getAllSystemFonts() {
+    //        UIFont.familyNames.map {
+    //            UIFont.fontNames(forFamilyName: $0)
+    //            }.forEach { (fonts:[String]) in
+    //                fonts.forEach({ print($0) })
+    //        }
+    //    }
     
     
     func applicationWillResignActive(_ application: UIApplication) {

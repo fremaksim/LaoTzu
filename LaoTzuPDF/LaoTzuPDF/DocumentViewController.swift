@@ -10,6 +10,7 @@ import UIKit
 import PDFKit
 import PDFKit.PDFSelection
 //import CommonCrypto
+import MoAESCryptor
 
 enum DocumentViewUserAction {
     case none
@@ -349,8 +350,8 @@ class DocumentViewController: UIViewController {
     @objc func waterConfigurationSaved(_ noti: Notification) {
         watermarkLayer = WatermarkPage.self
         
-//        loadDocument()
-//        pdfView.setNeedsDisplay()
+        //        loadDocument()
+        //        pdfView.setNeedsDisplay()
         
         // Access the document
         document?.open(completionHandler: { (success) in
@@ -398,10 +399,10 @@ class DocumentViewController: UIViewController {
     @IBAction func watermarkTest(_ sender: Any) {
         
         let waterConfigurationVC = WatermarkConfigurationViewController()
-//        navigationController?.pushViewController(waterConfigurationVC, animated: true)
+        //        navigationController?.pushViewController(waterConfigurationVC, animated: true)
         let navi = UINavigationController(rootViewController: waterConfigurationVC)
         present(navi, animated: true, completion: nil)
-  
+        
         
     }
     
@@ -438,9 +439,12 @@ class DocumentViewController: UIViewController {
         // 字节操作
         let newDocument = PDFDocument(url: url)
         if var newData = newDocument?.dataRepresentation() {
+            LogManager.shared.log.info("*before*: data bytes: \(newData.count)")
+            encryptorInObjc(at: url, fileData: newData)
+            return
             let cafe: Data = "Orange".data(using: .utf8)!// non-nil
             
-            LogManager.shared.log.info("*before*: data bytes: \(newData.count)")
+            
             //  *before*: data bytes: 23131808
             /*
              let before = newData.count
@@ -470,75 +474,166 @@ class DocumentViewController: UIViewController {
              }
              }
              */
-            // 加解密
-            DispatchQueue.global().async {
-                do {
-                    let password = "123456"
-                    let salt = AES256Crypter.randomSalt()
-                    let iv   = AES256Crypter.randomIv()
-                    let key  = try AES256Crypter.createKey(password: password.data(using: .utf8)!, salt: salt)
-                    let aes  = try AES256Crypter(key: key, iv: iv)
-                    
-                    let encryptedData = try aes.encrypt(newData) // pdf file
-                    
-                    DispatchQueue.main.async {
-                        print("encrypted success!",Date())
-                    }
-                    //            let decryptedData = try aes.decrypt(encryptedData)
-                    DispatchQueue.main.async {
-                        print("deencrypted success!",Date())
-                    }
-                    // 22.06Mb Encrypto needed 9s, all so need for with dencrypto, total 18s
-                    
-                    let fileType = "%PDF-"
-                    let endOfFile = "%%EOF"
-                    let headerData = fileType.data(using: .utf8)!
-                    var fileTypeData = headerData
-                    let endOfFileData = endOfFile.data(using: .utf8)!
-                    
-                    fileTypeData.append(encryptedData)
-                    fileTypeData.append(endOfFileData)
-                    fileTypeData.append(cafe)
-                    
-                    let targetPath = url.path.replacingOccurrences(of: "Se7enCopy.pdf", with: "Se7enDataEncrypted.file")
-                    
-                    print(targetPath)
-                    let targetURL = URL(fileURLWithPath: targetPath)
-                    print(targetURL)
-                    try fileTypeData.write(to: targetURL)
-                    LogManager.shared.log.info("write newData success")
-                    
-                    //去掉头
-                    let notHeadFileData = fileTypeData.subdata(in: headerData.count..<fileTypeData.count)
-                    
-                    FindEOF.findEncrypted(data: notHeadFileData, completion: { (index, isSuccess) in
-                        if isSuccess {
-                            if let start = index?.0,
-                                let end   = index?.1 {
-                                do{
-                                    let encryptPdfData = fileTypeData.subdata(in: headerData.count..<start)
-                                    let decryptPdfData = try aes.decrypt(encryptPdfData)
-                                    let newtargetPath = url.path.replacingOccurrences(of: "Se7enCopy.pdf", with: "Se7enDataDencrypted.pdf")
-                                    let newtargetURL = URL(fileURLWithPath: newtargetPath)
-                                    try  decryptPdfData.write(to: newtargetURL)
-                                    LogManager.shared.log.info("find pdf success!")
-                                    let privateData = fileTypeData.subdata(in: end..<fileTypeData.count)
-                                    if let privateString = String(data: privateData, encoding: .utf8){
-                                        LogManager.shared.log.debug(privateString)
+            
+          
+                // 加解密
+                DispatchQueue.global().async {
+                    do {
+                        let password = "123456"
+                        let salt = AES256Crypter.randomSalt()
+                        let iv   = AES256Crypter.randomIv()
+                        let key  = try AES256Crypter.createKey(password: password.data(using: .utf8)!, salt: salt)
+                        let aes  = try AES256Crypter(key: key, iv: iv)
+                        
+                        let encryptedData = try aes.encrypt(newData) // pdf file
+                        
+                        DispatchQueue.main.async {
+                            print("encrypted success!",Date())
+                        }
+                        //            let decryptedData = try aes.decrypt(encryptedData)
+                        DispatchQueue.main.async {
+                            print("deencrypted success!",Date())
+                        }
+                        // 22.06Mb Encrypto needed 9s, all so need for with dencrypto, total 18s
+                        
+                        let fileType = "%PDF-"
+                        let endOfFile = "%%EOF"
+                        let headerData = fileType.data(using: .utf8)!
+                        var fileTypeData = headerData
+                        let endOfFileData = endOfFile.data(using: .utf8)!
+                        
+                        fileTypeData.append(encryptedData)
+                        fileTypeData.append(endOfFileData)
+                        fileTypeData.append(cafe)
+                        
+                        let targetPath = url.path.replacingOccurrences(of: "Se7enCopy.pdf", with: "Se7enDataEncrypted.file")
+                        
+                        print(targetPath)
+                        let targetURL = URL(fileURLWithPath: targetPath)
+                        print(targetURL)
+                        try fileTypeData.write(to: targetURL)
+                        LogManager.shared.log.info("write newData success")
+                        
+                        //去掉头
+                        let notHeadFileData = fileTypeData.subdata(in: headerData.count..<fileTypeData.count)
+                        
+                        FindEOF.findEncrypted(data: notHeadFileData, completion: { (index, isSuccess) in
+                            if isSuccess {
+                                if let start = index?.0,
+                                    let end   = index?.1 {
+                                    do{
+                                        let encryptPdfData = fileTypeData.subdata(in: headerData.count..<start)
+                                        let decryptPdfData = try aes.decrypt(encryptPdfData)
+                                        let newtargetPath = url.path.replacingOccurrences(of: "Se7enCopy.pdf", with: "Se7enDataDencrypted.pdf")
+                                        let newtargetURL = URL(fileURLWithPath: newtargetPath)
+                                        try  decryptPdfData.write(to: newtargetURL)
+                                        LogManager.shared.log.info("find pdf success!")
+                                        let privateData = fileTypeData.subdata(in: end..<fileTypeData.count)
+                                        if let privateString = String(data: privateData, encoding: .utf8){
+                                            LogManager.shared.log.debug(privateString)
+                                        }
+                                    }catch{
+                                        LogManager.shared.log.error(error)
                                     }
-                                }catch{
-                                    LogManager.shared.log.error(error)
                                 }
                             }
-                        }
-                    })
-                    
-                } catch  {
-                    LogManager.shared.log.error("encrypto failer")
-                    LogManager.shared.log.error(error)
+                        })
+                        
+                    } catch  {
+                        LogManager.shared.log.error("encrypto failer")
+                        LogManager.shared.log.error(error)
+                    }
+            }
+        }
+    }
+    
+    
+    
+    private func encryptorInObjc(at url: URL, fileData: Data) {
+        let hammer = "Hammer".data(using: .utf8)!
+//        let password = "passwordpasswordpasswordpassword".data(using: .utf8)! //32byte
+        let password = MoAESKeyGenerater.key(byHashingPassword: "password",
+                                             keySize: MoAESCryptorType256)
+        
+        let settings = MoAESCryptorSetting(type: MoAESCryptorType256,
+                                           padding: MoAESCryptorPaddingZero,
+                                           keyPadding: MoAESCryptorKeyPaddingZero,
+                                           operation: MoAESCryptorOperationEncrypt)
+        
+        func encryptOrDecryptInBackground(fileData: Data,
+                                          key: Data,
+                                          settings: MoAESCryptorSetting,
+                                          completion: @escaping (Data?, MoAESCryptorError) -> () )  {
+            
+            DispatchQueue.global().async {
+                MoAESCryptor.ecbCipher(fileData,
+                                       key: key,
+                                       settings: settings) {  (encryptedData, error) in
+                                        DispatchQueue.main.async {
+                                            completion(encryptedData, error)
+                                        }
                 }
             }
         }
+        
+        encryptOrDecryptInBackground(fileData:fileData,
+                                     key: password,
+                                     settings: settings) { (data, error)  in
+                                        if let encryptedData = data {
+                                            LogManager.shared.log.info("encrypt success: \(encryptedData)")
+                                            let fileType  = "%PDF-"
+                                            let endOfFile = "%%EOF"
+                                            let headerData = fileType.data(using: .utf8)!
+                                            var fileTypeData = headerData
+                                            let endOfFileData = endOfFile.data(using: .utf8)!
+                                            
+                                            fileTypeData.append(encryptedData)
+                                            fileTypeData.append(endOfFileData)
+                                            fileTypeData.append(hammer)
+                                            
+                                            let targetPath = url.path.replacingOccurrences(of: "Se7enCopy",
+                                                                                           with: "Se7enDataEncrypted.file")
+                                            let targetURL = URL(fileURLWithPath: targetPath)
+                                            do {
+                                                try fileTypeData.write(to: targetURL)
+                                                LogManager.shared.log.info("write newData to path: \(targetPath) success")
+                                                
+                                                //去掉头
+                                                let notHeadFileData = fileTypeData.subdata(in: headerData.count..<fileTypeData.count)
+                                                FindEOF.findEncrypted(data: notHeadFileData, completion: { (index, isSuccess) in
+                                                    if isSuccess,
+                                                        let start = index?.0,
+                                                        let end   = index?.1 {
+                                                        let encryptPdfData = fileTypeData.subdata(in: headerData.count..<start)
+                                                        settings.operation = MoAESCryptorOperationDecrypt
+                                                        encryptOrDecryptInBackground(fileData: encryptPdfData,
+                                                                                     key: password,
+                                                                                     settings: settings,
+                                                                                     completion: { (data, error) in
+                                                                                        if let decryptPdfData = data {
+                                                                                            let newtargetPath = url.path.replacingOccurrences(of: "Se7enCopy.pdf", with: "Se7enDataDencrypted.pdf")
+                                                                                            let newtargetURL = URL(fileURLWithPath: newtargetPath)
+                                                                                            try? decryptPdfData.write(to: newtargetURL)
+                                                                                            LogManager.shared.log.info("find pdf success!")
+                                                                                            let privateData = fileTypeData.subdata(in: end..<fileTypeData.count)
+                                                                                            if let privateString = String(data: privateData, encoding: .utf8){
+                                                                                                LogManager.shared.log.debug(privateString)
+                                                                                            }
+                                                                                        }
+                                                        })
+                                                    }else {
+                                                        LogManager.shared.log.error("Encrypted Data Failure!!!")
+                                                    }
+                                                })
+                                                
+                                            }catch {
+                                                LogManager.shared.log.error(error)
+                                            }
+                                        }
+        }
+        
+        
+        
     }
     
     @IBAction func findAction(_ sender: UIBarButtonItem) {
@@ -594,7 +689,7 @@ class DocumentViewController: UIViewController {
         textAnnotation.iconType = .note
         textAnnotation.fontColor = UIColor.purple
         currentPage.addAnnotation(textAnnotation)
-    
+        
         //        documentPickerAction()
     }
 }
@@ -602,7 +697,7 @@ class DocumentViewController: UIViewController {
 extension DocumentViewController: PDFDocumentDelegate {
     // Watermark 2
     func classForPage() -> AnyClass {
-//        return WatermarkPage.self
+        //        return WatermarkPage.self
         return watermarkLayer
     }
 }

@@ -1,0 +1,22 @@
+{
+  "name": "MoAESCryptor",
+  "version": "0.0.2",
+  "summary": "A short description of MoAESCryptor.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/fremaksim/MoAESCryptor",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "fremaksim": "941725856@qq.com"
+  },
+  "source": {
+    "git": "https://MistyMorn@bitbucket.org/MistyMorn/aes.git",
+    "tag": "0.0.2"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "MoAESCryptor/Classes/**/*"
+}

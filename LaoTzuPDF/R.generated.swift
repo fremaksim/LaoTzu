@@ -16,21 +16,6 @@ struct R: Rswift.Validatable {
     try intern.validate()
   }
   
-  /// This `R.color` struct is generated, and contains static references to 0 colors.
-  struct color {
-    fileprivate init() {}
-  }
-  
-  /// This `R.file` struct is generated, and contains static references to 0 files.
-  struct file {
-    fileprivate init() {}
-  }
-  
-  /// This `R.font` struct is generated, and contains static references to 0 fonts.
-  struct font {
-    fileprivate init() {}
-  }
-  
   /// This `R.image` struct is generated, and contains static references to 2 images.
   struct image {
     /// Image `edit-annotations`.
@@ -57,20 +42,15 @@ struct R: Rswift.Validatable {
     static let watermarkConfigurationViewController = _R.nib._WatermarkConfigurationViewController()
     
     /// `UINib(name: "WatermarkConfigurationViewController", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.watermarkConfigurationViewController) instead")
     static func watermarkConfigurationViewController(_: Void = ()) -> UIKit.UINib {
       return UIKit.UINib(resource: R.nib.watermarkConfigurationViewController)
     }
     
-    fileprivate init() {}
-  }
-  
-  /// This `R.reuseIdentifier` struct is generated, and contains static references to 0 reuse identifiers.
-  struct reuseIdentifier {
-    fileprivate init() {}
-  }
-  
-  /// This `R.segue` struct is generated, and contains static references to 0 view controllers.
-  struct segue {
+    static func watermarkConfigurationViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> WaterConfigurationView? {
+      return R.nib.watermarkConfigurationViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? WaterConfigurationView
+    }
+    
     fileprivate init() {}
   }
   
@@ -91,11 +71,6 @@ struct R: Rswift.Validatable {
       return UIKit.UIStoryboard(resource: R.storyboard.main)
     }
     
-    fileprivate init() {}
-  }
-  
-  /// This `R.string` struct is generated, and contains static references to 0 localization tables.
-  struct string {
     fileprivate init() {}
   }
   
@@ -122,7 +97,7 @@ struct _R: Rswift.Validatable {
       let bundle = R.hostingBundle
       let name = "WatermarkConfigurationViewController"
       
-      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [NSObject : AnyObject]? = nil) -> WaterConfigurationView? {
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> WaterConfigurationView? {
         return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? WaterConfigurationView
       }
       
@@ -134,14 +109,20 @@ struct _R: Rswift.Validatable {
   
   struct storyboard: Rswift.Validatable {
     static func validate() throws {
+      try launchScreen.validate()
       try main.validate()
     }
     
-    struct launchScreen: Rswift.StoryboardResourceWithInitialControllerType {
+    struct launchScreen: Rswift.StoryboardResourceWithInitialControllerType, Rswift.Validatable {
       typealias InitialController = UIKit.UIViewController
       
       let bundle = R.hostingBundle
       let name = "LaunchScreen"
+      
+      static func validate() throws {
+        if #available(iOS 11.0, *) {
+        }
+      }
       
       fileprivate init() {}
     }
@@ -163,8 +144,10 @@ struct _R: Rswift.Validatable {
       }
       
       static func validate() throws {
-        if _R.storyboard.main().navigationController() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'navigationController' could not be loaded from storyboard 'Main' as 'UIKit.UINavigationController'.") }
+        if #available(iOS 11.0, *) {
+        }
         if _R.storyboard.main().documentBrowserViewController() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'documentBrowserViewController' could not be loaded from storyboard 'Main' as 'DocumentBrowserViewController'.") }
+        if _R.storyboard.main().navigationController() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'navigationController' could not be loaded from storyboard 'Main' as 'UIKit.UINavigationController'.") }
       }
       
       fileprivate init() {}

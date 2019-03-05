@@ -1,0 +1,6 @@
+framework module MoAESCryptor {
+  umbrella header "MoAESCryptor-umbrella.h"
+
+  export *
+  module * { export * }
+}

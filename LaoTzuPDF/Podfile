@@ -5,17 +5,24 @@ inhibit_all_warnings!
 
 
 target 'LaoTzuPDF' do
-  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
-  use_frameworks!
+# Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+workspace 'LaoTzuPDF.xcworkspace'
+use_frameworks!
 
-  # Pods for LaoTzuPDF
+
+
+# Pods for LaoTzuPDF
 
 pod 'R.swift'
-pod 'SwiftyBeaver'
-pod 'CryptoSwift', :git => "https://github.com/krzyzanowskim/CryptoSwift", :branch => "master"
+pod 'SwiftyBeaver', '1.6.1'
+#pod 'CryptoSwift', :git => "https://github.com/krzyzanowskim/CryptoSwift", :branch => "master"
 pod 'IQKeyboardManagerSwift'
 #pod 'Swifter'
 pod 'Mummy'
 
+pod 'MoAESCryptor', :git => "https://MistyMorn@bitbucket.org/MistyMorn/aes.git"
+
 
 end
+
+

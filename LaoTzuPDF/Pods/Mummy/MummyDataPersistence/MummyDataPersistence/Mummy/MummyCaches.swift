@@ -99,7 +99,7 @@ extension MummyCaches: MummyCachesDataCodable {
     ///   - object: the encodable struct to store
     ///   - directory: where to store the struct
     ///   - fileName: what to name the file where the struct data will be stored
-    public  func store<T: Encodable>(_ object: T, to directory: Directory, as fileName: String) {
+    public func store<T: Encodable>(_ object: T, to directory: Directory, as fileName: String) {
         let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
         
         let encoder = JSONEncoder()
@@ -121,7 +121,7 @@ extension MummyCaches: MummyCachesDataCodable {
     ///   - directory: directory where struct data is stored
     ///   - type: struct type (i.e. Message.self)
     /// - Returns: decoded struct model(s) of data
-    public  func retrieve<T: Decodable>(_ fileName: String, from directory: Directory, as type: T.Type) -> T {
+    public func retrieve<T: Decodable>(_ fileName: String, from directory: Directory, as type: T.Type) -> T {
         let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
         
         if !FileManager.default.fileExists(atPath: url.path) {
@@ -142,7 +142,7 @@ extension MummyCaches: MummyCachesDataCodable {
     }
     
     /// Remove all files at specified directory
-    func clear(_ directory: Directory) {
+    public func clear(_ directory: Directory) {
         let url = getURL(for: directory)
         do {
             let contents = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
@@ -155,7 +155,7 @@ extension MummyCaches: MummyCachesDataCodable {
     }
     
     /// Remove specified file from specified directory
-    func remove(_ fileName: String, from directory: Directory) {
+    public func remove(_ fileName: String, from directory: Directory) {
         let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
         if FileManager.default.fileExists(atPath: url.path) {
             do {
@@ -167,7 +167,7 @@ extension MummyCaches: MummyCachesDataCodable {
     }
     
     /// Returns BOOL indicating whether file exists at specified directory with specified file name
-    func fileExists(_ fileName: String, in directory: Directory) -> Bool {
+    public func fileExists(_ fileName: String, in directory: Directory) -> Bool {
         let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
         return FileManager.default.fileExists(atPath: url.path)
     }
@@ -371,7 +371,7 @@ extension MummyCaches: MummyCachesJSONDatable {
     
     // MARK: -- Private Methods
     
-    fileprivate  func cacheFilePath(with URL: String,
+    fileprivate func cacheFilePath(with URL: String,
                                     path: String ,
                                     subPath:String = "") -> String {
         

@@ -1,18 +1,18 @@
 PODS:
-  - CryptoSwift (0.13.1)
   - IQKeyboardManagerSwift (6.2.0)
-  - Mummy (0.0.3)
-  - R.swift (4.0.0):
-    - R.swift.Library (~> 4.0.0)
-  - R.swift.Library (4.0.0)
+  - MoAESCryptor (0.0.2)
+  - Mummy (0.0.4)
+  - R.swift (5.0.2):
+    - R.swift.Library (~> 5.0.0)
+  - R.swift.Library (5.0.0)
   - SwiftyBeaver (1.6.1)
 
 DEPENDENCIES:
-  - CryptoSwift (from `https://github.com/krzyzanowskim/CryptoSwift`, branch `master`)
   - IQKeyboardManagerSwift
+  - "MoAESCryptor (from `https://MistyMorn@bitbucket.org/MistyMorn/aes.git`)"
   - Mummy
   - R.swift
-  - SwiftyBeaver
+  - SwiftyBeaver (= 1.6.1)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -23,23 +23,22 @@ SPEC REPOS:
     - SwiftyBeaver
 
 EXTERNAL SOURCES:
-  CryptoSwift:
-    :branch: master
-    :git: https://github.com/krzyzanowskim/CryptoSwift
+  MoAESCryptor:
+    :git: "https://MistyMorn@bitbucket.org/MistyMorn/aes.git"
 
 CHECKOUT OPTIONS:
-  CryptoSwift:
-    :commit: 288692d159d1babc245a031dc59be759efd531bc
-    :git: https://github.com/krzyzanowskim/CryptoSwift
+  MoAESCryptor:
+    :commit: 50851e829a51b15499430bf762d1593496601c28
+    :git: "https://MistyMorn@bitbucket.org/MistyMorn/aes.git"
 
 SPEC CHECKSUMS:
-  CryptoSwift: ff68c35a53e03177d31aaa2c1e8b3e010aeed6cb
   IQKeyboardManagerSwift: b07ccf9d8cafe993dcd6cb794eb4ba34611a0c4e
-  Mummy: 6f1fea48d11f04a36ee5053e480d7062e0ecd741
-  R.swift: d6a5ec2f55a8441dc0ed9f1f8b37d7d11ae85c66
-  R.swift.Library: c3af34921024333546e23b70e70d0b4e0cffca75
+  MoAESCryptor: d2e27bc98fde2c1cc91c5c1c940f6c60b62d4433
+  Mummy: b7f92c28e6e23d32b058d58cc134fe8e38062eb1
+  R.swift: 81455d81467763cbd3f4d79d938d05f4ac4c0228
+  R.swift.Library: 0bf390e729bc10bb2c9e4fb78bd043164a7be4ff
   SwiftyBeaver: ccfcdf85a04d429f1633f668650b0ce8020bda3a
 
-PODFILE CHECKSUM: ac9fdc1e43e9ccdceab5322e2efd009f6e61d48e
+PODFILE CHECKSUM: a370cd446406470f1f42c07d1fcff1ef4adc226c
 
-COCOAPODS: 1.6.0.beta.2
+COCOAPODS: 1.6.1
