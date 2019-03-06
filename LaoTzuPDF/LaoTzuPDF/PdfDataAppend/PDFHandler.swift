@@ -34,13 +34,16 @@ public protocol PDFTailerable {
 
 public protocol PDFAppendable {
     
-    /// <#Description#>
+    /// 标准PDF data 拼接 PDFTailerable
     ///
-    /// - Parameter tailer: <#tailer description#>
-    /// - Returns: <#return value description#>
+    /// - Parameter tailer: PDFTailerable
+    /// - Returns: 拼接后的文件Data
     func appending(tailer: PDFTailerable) -> Data
     
     
+    /// 从已经拼接的文件data中重新截取到PDFTailer data
+    ///
+    /// - Parameter completion: 截取到的PDFTailer data
     func retrieve(completion: @escaping (_: PDFTailer) -> () )
     
     
@@ -124,7 +127,7 @@ extension PDFHandler: PDFHandlerable {
         if let extend = tailer.extend {
             origin.append(extend)
         }
-        appendedData = origin
+        self.appendedData = origin
         return origin
     }
     
@@ -133,7 +136,7 @@ extension PDFHandler: PDFHandlerable {
         var mutableOrigin = Data()
         FindEOF.findEncrypted(data: appendedData) { (index, isPdf) in
             if let end = index?.1 {
-                mutableOrigin = mutableOrigin.subdata(in: 0..<end)
+                mutableOrigin = self.appendedData.subdata(in: 0..<end)
                 completion(mutableOrigin)
             }
         }

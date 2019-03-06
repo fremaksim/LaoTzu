@@ -592,6 +592,13 @@ class DocumentViewController: UIViewController {
             print(tailer.getVersion())
             print(tailer.getId())
         })
+        
+        pdfhandler?.removedAppended(completion: { (origin) in
+            let targetPath = url.path.replacingOccurrences(of: "Se7enCopy",
+                                                           with: "Se7enCopyReback.pdf")
+            let targetURL = URL(fileURLWithPath: targetPath)
+            try? origin.write(to: targetURL)
+        })
     }
     
     
