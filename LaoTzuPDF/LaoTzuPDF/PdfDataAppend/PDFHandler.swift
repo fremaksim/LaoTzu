@@ -22,15 +22,17 @@ import Foundation
  |--- 2 ---|----  ---|---------|
  
  */
+// 存取原则， 怎么存，怎么取， string utf8 存就得 string utf8 取， Int，Double,.. 存， Int，Double 取。
 
-protocol PDFTailerable {
+// 在iOS 64为系统中，
+public protocol PDFTailerable {
     var length: Data { get set }
     var version: Data { get set }
     var id: Data { get set }
     var extend: Data? { get set }
 }
 
-protocol PDFAppendable {
+public protocol PDFAppendable {
     
     /// <#Description#>
     ///
@@ -38,53 +40,75 @@ protocol PDFAppendable {
     /// - Returns: <#return value description#>
     func appending(tailer: PDFTailerable) -> Data
     
+    
+    func retrieve(completion: @escaping (_: PDFTailer) -> () )
+    
+    
 }
 
-protocol PDFRemoveable {
-
+public protocol PDFRemoveable {
+    
     /// <#Description#>
     ///
     /// - Parameter completion: <#completion description#>
     /// - Returns: <#return value description#>
     func removedAppended(completion: @escaping (_: Data) -> ())
     
-
+    
     /// <#Description#>
     ///
     /// - Parameter completion: <#completion description#>
     func pop(completion: @escaping (_: Data) -> ())
+    
 }
 
-typealias PDFHandlerable = PDFAppendable & PDFRemoveable
+public typealias PDFHandlerable = PDFAppendable & PDFRemoveable
 
 
-struct PDFTailer: PDFTailerable {
+public struct PDFTailer: PDFTailerable {
     
-    var length: Data
+    public var length: Data
     
-    var version: Data
+    public var version: Data
     
-    var id: Data
+    public var id: Data
     
-    var extend: Data?
+    public var extend: Data?
     
-    init(length: Data, version: Data, id: Data, extend: Data? = nil) {
+    public init(length: Data, version: Data, id: Data, extend: Data? = nil) {
         self.length = length
         self.version = version
         self.id = id
         self.extend = extend
     }
     
-    // 长度限制
+    public func getLength() -> Int? {
+        if let str = String(data: length, encoding: .utf8) {
+            return Int(str)
+        }
+        return nil
+    }
+    
+    public func getVersion() -> Int? {
+        if let str = String(data: version, encoding: .utf8) {
+            return Int(str)
+        }
+        return nil
+    }
+    
+    public func getId() -> Int {
+        return id.to(type: Int.self)
+    }
     
 }
 
 
-class PDFHandler {
+public class PDFHandler {
     
     let inputData: Data
+    var appendedData = Data()
     
-    init(inputData: Data) {
+    public init(inputData: Data) {
         self.inputData = inputData
     }
     
@@ -92,7 +116,7 @@ class PDFHandler {
 
 extension PDFHandler: PDFHandlerable {
     
-    func appending(tailer: PDFTailerable) -> Data {
+    public func appending(tailer: PDFTailerable) -> Data {
         var origin = inputData
         origin.append(tailer.length)
         origin.append(tailer.version)
@@ -100,13 +124,14 @@ extension PDFHandler: PDFHandlerable {
         if let extend = tailer.extend {
             origin.append(extend)
         }
+        appendedData = origin
         return origin
     }
     
-    func removedAppended(completion: @escaping (Data) -> ()) {
+    public  func removedAppended(completion: @escaping (Data) -> ()) {
         // ToDo -- 1000kb
-        var mutableOrigin = inputData
-        FindEOF.find(data: inputData) { (index, isPdf) in
+        var mutableOrigin = Data()
+        FindEOF.findEncrypted(data: appendedData) { (index, isPdf) in
             if let end = index?.1 {
                 mutableOrigin = mutableOrigin.subdata(in: 0..<end)
                 completion(mutableOrigin)
@@ -114,15 +139,64 @@ extension PDFHandler: PDFHandlerable {
         }
     }
     
-    func pop(completion: @escaping (Data) -> ()){
+    public  func pop(completion: @escaping (Data) -> ()){
         // ToDo -- 1000kb
-        var mutableOrigin = inputData
-        FindEOF.find(data: inputData) { (index, isPdf) in
+        var mutableOrigin = Data()
+        FindEOF.findEncrypted(data: inputData) { (index, isPdf) in
             if let end = index?.1 {
-                mutableOrigin = mutableOrigin.subdata(in: end..<self.inputData.count)
+                let begin = (end - FileEndFlagData.PDF10.count) + 1
+                mutableOrigin = self.appendedData.subdata(in: begin..<self.appendedData.count)
                 completion(mutableOrigin)
             }
         }
     }
     
+    public func retrieve(completion: @escaping (PDFTailer) -> ()) {
+        pop { (appendedData) in
+            
+            let lengthData = appendedData.subdata(in: 0..<4) // 长度: 4-byte
+            
+            let versionData = appendedData.subdata(in: 4..<8)// 版本: 4-byte
+            
+            let idData = appendedData.subdata(in: 8..<16)    // id: 8-byte
+            
+            let count = appendedData.count
+            var extendData: Data? = nil
+            if count > 16 {
+                extendData = appendedData.subdata(in: 16..<count)
+            }
+            
+            let tailer = PDFTailer(length: lengthData,
+                                   version: versionData,
+                                   id: idData,
+                                   extend: extendData)
+            completion(tailer)
+        }
+    }
+    
+}
+
+// https://stackoverflow.com/questions/38023838/round-trip-swift-number-types-to-from-data
+public extension Data {
+    
+    init<T>(from value: T) {
+        self = Swift.withUnsafeBytes(of: value) { Data($0) }
+    }
+    
+    func to<T>(type: T.Type) -> T {
+        return self.withUnsafeBytes { $0.pointee }
+    }
+}
+
+//let value = 42.13 // implicit Double
+//let data = Data(from: value)
+//print(data as NSData) // <713d0ad7 a3104540>
+//
+//let roundtrip = data.to(type: Double.self)
+//print(roundtrip) // 42.13
+
+public extension Data {
+    
+    //let str = String(data: self, encoding: .utf8)
+    //    let data = "str".data(using: .utf8)
 }

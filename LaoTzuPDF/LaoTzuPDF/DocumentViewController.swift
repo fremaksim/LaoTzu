@@ -35,6 +35,8 @@ extension DocumentViewController {
 
 class DocumentViewController: UIViewController {
     
+    var pdfhandler: PDFHandler? = nil
+    
     var watermarkLayer: AnyClass = PDFPage.self
     
     @IBOutlet weak var pdfView: PDFView!
@@ -449,7 +451,9 @@ class DocumentViewController: UIViewController {
         let newDocument = PDFDocument(url: url)
         if var newData = newDocument?.dataRepresentation() {
             LogManager.shared.log.info("*before*: data bytes: \(newData.count)")
-            encryptorInObjc(at: url, fileData: newData)
+//            encryptorInObjc(at: url, fileData: newData)
+            handlerDoing(at: url, fileData: newData)
+            
             return
             let cafe: Data = "Orange".data(using: .utf8)!// non-nil
             
@@ -554,6 +558,40 @@ class DocumentViewController: UIViewController {
                     }
             }
         }
+    }
+    
+    private func handlerDoing(at url: URL, fileData: Data){
+  
+        let length = "0016"
+        let lengthData = length.data(using: .utf8)!
+      
+        let version = "0001"
+        let versionData = version.data(using: .utf8)!
+        
+        var id = 2501
+        let idData = Data(bytes: &id, count: MemoryLayout.size(ofValue: id))
+
+        let pdfTailer = PDFTailer(length: lengthData,
+                                  version: versionData,
+                                  id: idData)
+//        var mutableData = fileData
+        
+        self.pdfhandler = PDFHandler(inputData: fileData)
+        let appendedData = pdfhandler?.appending(tailer: pdfTailer)
+        
+        let targetPath = url.path.replacingOccurrences(of: "Se7enCopy",
+                                                       with: "Se7enDataAppend.pdf")
+        let targetURL = URL(fileURLWithPath: targetPath)
+        try? appendedData?.write(to: targetURL)
+        
+//        pdfhandler?.pop(completion: { (data) in
+//            LogManager.shared.log.info([UInt8](data))
+//        })
+        pdfhandler?.retrieve(completion: { (tailer) in
+            print(tailer.getLength())
+            print(tailer.getVersion())
+            print(tailer.getId())
+        })
     }
     
     
