@@ -21,7 +21,9 @@ pod 'IQKeyboardManagerSwift'
 pod 'Mummy'
 
 pod 'MoAESCryptor', :git => "https://MistyMorn@bitbucket.org/MistyMorn/aes.git"
-
+pod 'PromiseKit'
+#pod 'coobjc'
+pod 'MKDropdownMenu'
 
 end
 

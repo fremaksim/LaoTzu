@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Rswift
 
 class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocumentBrowserViewControllerDelegate {
     
@@ -85,10 +86,8 @@ class DocumentBrowserViewController: UIDocumentBrowserViewController, UIDocument
     // MARK: Document Presentation
     
     func presentDocument(at documentURL: URL) {
-        
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        
-        let navigationController = storyBoard.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
+        let mainStoryBoard = R.storyboard.main()
+        let navigationController = mainStoryBoard.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
         
         let documentViewController = navigationController.viewControllers.first as! DocumentViewController
         documentViewController.document = Document(fileURL: documentURL)

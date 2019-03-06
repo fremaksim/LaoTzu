@@ -11,6 +11,8 @@ import PDFKit
 import PDFKit.PDFSelection
 //import CommonCrypto
 import MoAESCryptor
+import MKDropdownMenu
+
 
 enum DocumentViewUserAction {
     case none
@@ -342,6 +344,13 @@ class DocumentViewController: UIViewController {
                                                         scale: CGFloat(i))
                                         }
             })
+ 
+            // pop menu
+//            let popMenu = MKDropdownMenu(frame: targetRect)
+//            popMenu.presentingView = pdfView
+//            popMenu.delegate  = self
+//            popMenu.dataSource = self
+//            self.view.addSubview(popMenu)
         }
         
         navigationController?.barHideOnTapGestureRecognizer.isEnabled = true
@@ -761,4 +770,33 @@ extension DocumentViewController: UIDocumentPickerDelegate {
         navigationController?.pushViewController(documentPicker, animated: true)
     }
 }
+
+
+extension DocumentViewController: MKDropdownMenuDelegate, MKDropdownMenuDataSource {
+    func numberOfComponents(in dropdownMenu: MKDropdownMenu) -> Int {
+        return 1
+    }
+    
+    func dropdownMenu(_ dropdownMenu: MKDropdownMenu, numberOfRowsInComponent component: Int) -> Int {
+        return 1
+    }
+    
+    
+    func dropdownMenu(_ dropdownMenu: MKDropdownMenu, widthForComponent component: Int) -> CGFloat {
+        return 100
+    }
+    
+    func dropdownMenu(_ dropdownMenu: MKDropdownMenu, rowHeightForComponent component: Int) -> CGFloat {
+        return 100
+    }
+    func dropdownMenu(_ dropdownMenu: MKDropdownMenu, viewForComponent component: Int) -> UIView {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 21))
+        label.text = "MKDropdownMenu"
+        label.backgroundColor = UIColor.yellow.withAlphaComponent(0.3)
+        return label
+    }
+    
+    
+}
+
 
