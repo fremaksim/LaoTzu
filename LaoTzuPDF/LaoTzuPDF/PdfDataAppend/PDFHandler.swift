@@ -51,16 +51,15 @@ public protocol PDFAppendable {
 
 public protocol PDFRemoveable {
     
-    /// <#Description#>
+    /// 获取有原始 pdf data
     ///
-    /// - Parameter completion: <#completion description#>
-    /// - Returns: <#return value description#>
+    /// - Parameter completion: 原始pdf data
     func removedAppended(completion: @escaping (_: Data) -> ())
     
     
-    /// <#Description#>
+    /// 获取 追加的 data
     ///
-    /// - Parameter completion: <#completion description#>
+    /// - Parameter completion: 追加Data回调
     func pop(completion: @escaping (_: Data) -> ())
     
 }
