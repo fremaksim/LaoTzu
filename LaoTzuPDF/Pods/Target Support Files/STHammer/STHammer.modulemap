@@ -1,0 +1,6 @@
+framework module STHammer {
+  umbrella header "STHammer-umbrella.h"
+
+  export *
+  module * { export * }
+}

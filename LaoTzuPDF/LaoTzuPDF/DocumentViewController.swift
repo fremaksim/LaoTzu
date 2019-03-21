@@ -9,17 +9,7 @@
 import UIKit
 import PDFKit
 import PDFKit.PDFSelection
-//import CommonCrypto
 import MoAESCryptor
-import MKDropdownMenu
-
-
-enum DocumentViewUserAction {
-    case none
-    case annotationClick
-    case editButtonClick
-    case addAnnotation
-}
 
 extension DocumentViewController {
     func goToPage(page: PDFPage) {
@@ -67,10 +57,10 @@ class DocumentViewController: UIViewController {
     }()
     
     // annotation
-    var userAction: DocumentViewUserAction = .none
+//    var userAction: DocumentViewUserAction = .none
     
     override func viewDidLoad() {
-        navigationController?.barHideOnTapGestureRecognizer.addTarget(self, action: #selector(barHideOnTapGestureRecognizerHandler))
+        navigationController?.barHideOnTapGestureRecognizer.addTarget(self, action: #selector(barHideOnTapGestureRecognizerHandler(_:)))
         
         pdfView.autoScales = true
         pdfView.displayMode = .singlePage
@@ -230,15 +220,28 @@ class DocumentViewController: UIViewController {
      }
      */
     
-    @objc func barHideOnTapGestureRecognizerHandler() {
-        if userAction != .none {
-            userAction = .none
+    @objc func barHideOnTapGestureRecognizerHandler(_ sender: UITapGestureRecognizer) {
+        let point = sender.location(in: pdfView)
+        if editButton.frame.contains(point) {
+            hideBars()
             return
         }
+   
         navigationController?.setToolbarHidden(navigationController?.isNavigationBarHidden == true, animated: true)
         setNeedsUpdateOfHomeIndicatorAutoHidden()
         
         cleanAnnotationPopView()
+    }
+    
+    private func hideBars() {
+        navigationController?.setNavigationBarHidden(true, animated: true)
+        navigationController?.setToolbarHidden(true, animated: true)
+        setNeedsUpdateOfHomeIndicatorAutoHidden()
+    }
+    private func showBars() {
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setToolbarHidden(false, animated: false)
+        setNeedsUpdateOfHomeIndicatorAutoHidden()
     }
     
     func getScaleFactorForSizeToFit() {
@@ -299,7 +302,6 @@ class DocumentViewController: UIViewController {
     }
     
     @objc func didHitAnnotation(_ noti: NSNotification) {
-        userAction = .annotationClick
         // clean
         cleanAnnotationPopView()
         
@@ -588,8 +590,8 @@ class DocumentViewController: UIViewController {
 //            LogManager.shared.log.info([UInt8](data))
 //        })
         pdfhandler?.retrieve(completion: { (tailer) in
-            print(tailer.getLength())
-            print(tailer.getVersion())
+            print(tailer.getLength() ?? 0)
+            print(tailer.getVersion() ?? 0)
             print(tailer.getId())
         })
         
@@ -705,8 +707,7 @@ class DocumentViewController: UIViewController {
     
     
     @objc func editButtonClick() {
-        userAction = .editButtonClick
-        
+
         let annotationButton = UIButton(type: .custom)
         annotationButton.isExclusiveTouch = true
         annotationButton.setImage(R.image.editAnnotations(), for: .normal)
@@ -726,7 +727,6 @@ class DocumentViewController: UIViewController {
     }
     
     @objc func annotationButtonClick() {
-        userAction = .addAnnotation
         
         // detect this file is in Document/Inbox
         if document?.isInDocumentInbox() == true { // Copy to folder
@@ -814,34 +814,8 @@ extension DocumentViewController: UIDocumentPickerDelegate {
         documentPicker.delegate = self
         navigationController?.pushViewController(documentPicker, animated: true)
     }
-}
-
-
-extension DocumentViewController: MKDropdownMenuDelegate, MKDropdownMenuDataSource {
-    func numberOfComponents(in dropdownMenu: MKDropdownMenu) -> Int {
-        return 1
-    }
-    
-    func dropdownMenu(_ dropdownMenu: MKDropdownMenu, numberOfRowsInComponent component: Int) -> Int {
-        return 1
-    }
-    
-    
-    func dropdownMenu(_ dropdownMenu: MKDropdownMenu, widthForComponent component: Int) -> CGFloat {
-        return 100
-    }
-    
-    func dropdownMenu(_ dropdownMenu: MKDropdownMenu, rowHeightForComponent component: Int) -> CGFloat {
-        return 100
-    }
-    func dropdownMenu(_ dropdownMenu: MKDropdownMenu, viewForComponent component: Int) -> UIView {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 21))
-        label.text = "MKDropdownMenu"
-        label.backgroundColor = UIColor.yellow.withAlphaComponent(0.3)
-        return label
-    }
-    
     
 }
+
 
 

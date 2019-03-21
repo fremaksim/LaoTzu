@@ -15,6 +15,8 @@ PODS:
   - R.swift (5.0.2):
     - R.swift.Library (~> 5.0.0)
   - R.swift.Library (5.0.0)
+  - STHammer (0.0.5):
+    - SwiftyBeaver (= 1.6.1)
   - SwiftyBeaver (1.6.1)
 
 DEPENDENCIES:
@@ -24,6 +26,7 @@ DEPENDENCIES:
   - Mummy
   - PromiseKit
   - R.swift
+  - "STHammer (from `https://MistyMorn@bitbucket.org/MistyMorn/sthammer.git`)"
   - SwiftyBeaver (= 1.6.1)
 
 SPEC REPOS:
@@ -39,11 +42,16 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   MoAESCryptor:
     :git: "https://MistyMorn@bitbucket.org/MistyMorn/aes.git"
+  STHammer:
+    :git: "https://MistyMorn@bitbucket.org/MistyMorn/sthammer.git"
 
 CHECKOUT OPTIONS:
   MoAESCryptor:
     :commit: 50851e829a51b15499430bf762d1593496601c28
     :git: "https://MistyMorn@bitbucket.org/MistyMorn/aes.git"
+  STHammer:
+    :commit: 8bc40dc1cc0a5203fffd506470e25c30ad7ae11f
+    :git: "https://MistyMorn@bitbucket.org/MistyMorn/sthammer.git"
 
 SPEC CHECKSUMS:
   IQKeyboardManagerSwift: b07ccf9d8cafe993dcd6cb794eb4ba34611a0c4e
@@ -53,8 +61,9 @@ SPEC CHECKSUMS:
   PromiseKit: 94c6e781838c5bf4717677d0d882b0e7250c80fc
   R.swift: 81455d81467763cbd3f4d79d938d05f4ac4c0228
   R.swift.Library: 0bf390e729bc10bb2c9e4fb78bd043164a7be4ff
+  STHammer: fed40eade128872f912778e6d7ef1e60afb91e1e
   SwiftyBeaver: ccfcdf85a04d429f1633f668650b0ce8020bda3a
 
-PODFILE CHECKSUM: 15a205ef82e4a8726ec227d4c770fefd64095b49
+PODFILE CHECKSUM: 57d29aa56cd6aa5136c704ef6eb98eabcc8fe8d0
 
 COCOAPODS: 1.6.1

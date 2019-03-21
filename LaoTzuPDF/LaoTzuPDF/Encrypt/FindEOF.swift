@@ -16,6 +16,12 @@ import Foundation
 // 10进制  %%PDF
 //let EndOfFile: [UInt8] = [37, 37, 69, 79, 70]
 
+// 10进制  .%%EOF.
+//let EndOfFile: [UInt8] = [10, 37, 37, 69, 79, 70, 10]
+
+// hex进制  .%%EOF.
+//let EndOfFile: [UInt8] = [0x0A, 0x25, 0x25, 0x45, 0x4F, 0x46, 0x0A]
+
 public struct FileEndFlagData {
     
     static var PDF: [UInt8]   = [0x25, 0x25, 0x45, 0x4F, 0x46]

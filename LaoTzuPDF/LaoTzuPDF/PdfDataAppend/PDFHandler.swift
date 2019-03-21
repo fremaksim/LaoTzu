@@ -26,10 +26,10 @@ import Foundation
 
 // 在iOS 64为系统中，
 public protocol PDFTailerable {
-    var length: Data { get set }
-    var version: Data { get set }
-    var id: Data { get set }
-    var extend: Data? { get set }
+    var length: Data {get set}
+    var version: Data {get set}
+    var id: Data {get set}
+    var extend: Data? {get set}
 }
 
 public protocol PDFAppendable {
@@ -51,7 +51,7 @@ public protocol PDFAppendable {
 
 public protocol PDFRemoveable {
     
-    /// 获取有原始 pdf data
+    /// 获取有原始(文件)pdf data,移除追加的data
     ///
     /// - Parameter completion: 原始pdf data
     func removedAppended(completion: @escaping (_: Data) -> ())
@@ -108,6 +108,7 @@ public struct PDFTailer: PDFTailerable {
 public class PDFHandler {
     
     let inputData: Data
+    //FIXME: - 可选类型
     var appendedData = Data()
     
     public init(inputData: Data) {
@@ -118,6 +119,7 @@ public class PDFHandler {
 
 extension PDFHandler: PDFHandlerable {
     
+    // MARK: - PDFAppendable
     public func appending(tailer: PDFTailerable) -> Data {
         var origin = inputData
         origin.append(tailer.length)
@@ -128,29 +130,6 @@ extension PDFHandler: PDFHandlerable {
         }
         self.appendedData = origin
         return origin
-    }
-    
-    public  func removedAppended(completion: @escaping (Data) -> ()) {
-        // ToDo -- 1000kb
-        var mutableOrigin = Data()
-        FindEOF.findEncrypted(data: appendedData) { (index, isPdf) in
-            if let end = index?.1 {
-                mutableOrigin = self.appendedData.subdata(in: 0..<end)
-                completion(mutableOrigin)
-            }
-        }
-    }
-    
-    public  func pop(completion: @escaping (Data) -> ()){
-        // ToDo -- 1000kb
-        var mutableOrigin = Data()
-        FindEOF.findEncrypted(data: inputData) { (index, isPdf) in
-            if let end = index?.1 {
-                let begin = (end - FileEndFlagData.PDF10.count) + 1
-                mutableOrigin = self.appendedData.subdata(in: begin..<self.appendedData.count)
-                completion(mutableOrigin)
-            }
-        }
     }
     
     public func retrieve(completion: @escaping (PDFTailer) -> ()) {
@@ -165,7 +144,7 @@ extension PDFHandler: PDFHandlerable {
             let count = appendedData.count
             var extendData: Data? = nil
             if count > 16 {
-                extendData = appendedData.subdata(in: 16..<count)
+                extendData = appendedData.subdata(in: 16..<count) // extend: --
             }
             
             let tailer = PDFTailer(length: lengthData,
@@ -175,7 +154,29 @@ extension PDFHandler: PDFHandlerable {
             completion(tailer)
         }
     }
+    // MARK: - PDFRemoveable
+    public func removedAppended(completion: @escaping (Data) -> ()) {
+        // ToDo -- 1000kb
+        var mutableOrigin = Data()
+        FindEOF.findEncrypted(data: appendedData) { (index, isPdf) in
+            if let end = index?.1 {
+                mutableOrigin = self.appendedData.subdata(in: 0..<end)
+                completion(mutableOrigin)
+            }
+        }
+    }
     
+    public func pop(completion: @escaping (Data) -> ()){
+        // ToDo -- 1000kb
+        var mutableOrigin = Data()
+        FindEOF.findEncrypted(data: inputData) { (index, isPdf) in
+            if let end = index?.1 {
+                let begin = (end - FileEndFlagData.PDF10.count) + 1
+                mutableOrigin = self.appendedData.subdata(in: begin..<self.appendedData.count)
+                completion(mutableOrigin)
+            }
+        }
+    }
 }
 
 // https://stackoverflow.com/questions/38023838/round-trip-swift-number-types-to-from-data
