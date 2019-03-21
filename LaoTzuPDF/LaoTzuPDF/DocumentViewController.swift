@@ -55,6 +55,7 @@ class DocumentViewController: UIViewController {
         btn.isExclusiveTouch = true
         return btn
     }()
+    weak var popEditView: UIView?
     
     // annotation
 //    var userAction: DocumentViewUserAction = .none
@@ -222,7 +223,7 @@ class DocumentViewController: UIViewController {
     
     @objc func barHideOnTapGestureRecognizerHandler(_ sender: UITapGestureRecognizer) {
         let point = sender.location(in: pdfView)
-        if editButton.frame.contains(point) {
+        if editButton.frame.contains(point) || popEditView?.frame.contains(point) ?? false {
             hideBars()
             return
         }
@@ -303,61 +304,65 @@ class DocumentViewController: UIViewController {
     
     @objc func didHitAnnotation(_ noti: NSNotification) {
         // clean
-        cleanAnnotationPopView()
-        
-        guard let userInfo = noti.userInfo else { return }
-        
-        //        LogManager.shared.log.info(userInfo)
-        if let annotation = userInfo["PDFAnnotationHit"] as? PDFAnnotation {
-            LogManager.shared.log.info(annotation.annotationKeyValues)
-            let convertRect = pdfView.convert(annotation.bounds, from: annotation.page!)
-            
-            let scale: CGFloat = 4.0
-            var targetRect = convertRect
-            targetRect.size.width  *= scale
-            targetRect.size.height *= scale
-            
-            let scaleView: AnnotationPopView = AnnotationPopView(frame: targetRect)
-            scaleView.contents = annotation.contents
-            view.addSubview(scaleView)
-            
-            func addKeyFrame(scaleView: UIView, convertRect: CGRect, scale: CGFloat) {
-                let startTime: Double
-                if scale == 1.0 {
-                    startTime = 0.25
-                }else {
-                    startTime  = 0.25 * Double(scale - 1)
+        DispatchQueue.main.async {
+            self.cleanAnnotationPopView()
+            DispatchQueue.main.async {
+                guard let userInfo = noti.userInfo else { return }
+                
+                //        LogManager.shared.log.info(userInfo)
+                if let annotation = userInfo["PDFAnnotationHit"] as? PDFAnnotation {
+                    LogManager.shared.log.info(annotation.annotationKeyValues)
+                    let convertRect = self.pdfView.convert(annotation.bounds, from: annotation.page!)
+                    
+                    let scale: CGFloat = 4.0
+                    var targetRect = convertRect
+                    targetRect.size.width  *= scale
+                    targetRect.size.height *= scale
+                    
+                    let scaleView: AnnotationPopView = AnnotationPopView(frame: targetRect)
+                    scaleView.contents = annotation.contents
+                    self.view.addSubview(scaleView)
+                    
+                    func addKeyFrame(scaleView: UIView, convertRect: CGRect, scale: CGFloat) {
+                        let startTime: Double
+                        if scale == 1.0 {
+                            startTime = 0.25
+                        }else {
+                            startTime  = 0.25 * Double(scale - 1)
+                        }
+                        UIView.addKeyframe(withRelativeStartTime: startTime ,
+                                           relativeDuration: 0.25,
+                                           animations: {
+                                            var newFrame = scaleView.frame
+                                            newFrame.size.width  = convertRect.width * scale
+                                            newFrame.size.height = convertRect.height * scale
+                                            scaleView.frame = newFrame
+                        })
+                    }
+                    
+                    UIView.animateKeyframes(withDuration: 1,
+                                            delay: 0,
+                                            options:.calculationModeCubic,
+                                            animations: {
+                                                for i in 1...4 {
+                                                    addKeyFrame(scaleView: scaleView,
+                                                                convertRect: convertRect,
+                                                                scale: CGFloat(i))
+                                                }
+                    })
+                    // pop menu
+                    //            let popMenu = MKDropdownMenu(frame: targetRect)
+                    //            popMenu.presentingView = pdfView
+                    //            popMenu.delegate  = self
+                    //            popMenu.dataSource = self
+                    //            self.view.addSubview(popMenu)
                 }
-                UIView.addKeyframe(withRelativeStartTime: startTime ,
-                                   relativeDuration: 0.25,
-                                   animations: {
-                                    var newFrame = scaleView.frame
-                                    newFrame.size.width  = convertRect.width * scale
-                                    newFrame.size.height = convertRect.height * scale
-                                    scaleView.frame = newFrame
-                })
             }
-            
-            UIView.animateKeyframes(withDuration: 1,
-                                    delay: 0,
-                                    options:.calculationModeCubic,
-                                    animations: {
-                                        for i in 1...4 {
-                                            addKeyFrame(scaleView: scaleView,
-                                                        convertRect: convertRect,
-                                                        scale: CGFloat(i))
-                                        }
-            })
- 
-            // pop menu
-//            let popMenu = MKDropdownMenu(frame: targetRect)
-//            popMenu.presentingView = pdfView
-//            popMenu.delegate  = self
-//            popMenu.dataSource = self
-//            self.view.addSubview(popMenu)
         }
         
-        navigationController?.barHideOnTapGestureRecognizer.isEnabled = true
+
+        
+//        navigationController?.barHideOnTapGestureRecognizer.isEnabled = true
     }
     
     @objc func waterConfigurationSaved(_ noti: Notification) {
@@ -453,8 +458,8 @@ class DocumentViewController: UIViewController {
         let newDocument = PDFDocument(url: url)
         if var newData = newDocument?.dataRepresentation() {
             LogManager.shared.log.info("*before*: data bytes: \(newData.count)")
-//            encryptorInObjc(at: url, fileData: newData)
-            handlerDoing(at: url, fileData: newData)
+            encryptorInObjc(at: url, fileData: newData)
+//            handlerDoing(at: url, fileData: newData)
             
             return
             let cafe: Data = "Orange".data(using: .utf8)!// non-nil
@@ -722,7 +727,7 @@ class DocumentViewController: UIViewController {
                                         y: 0,
                                         width: 50,
                                         height: 50)
-        
+        self.popEditView = customView
         MaskPopViewController.show(on: self, with: customView)
     }
     
